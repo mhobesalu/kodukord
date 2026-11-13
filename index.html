@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kodukord</title>
+<meta name="theme-color" content="#2a8c7e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Kodukord">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{
+  --bg:#f6f4ee; --card:#fff; --ink:#23302e; --muted:#6f7c79; --line:#e6e2d8;
+  --teal:#2a8c7e; --teal-soft:#dff1ec; --sun:#f4b942; --sun-soft:#fdf1d6;
+  --rose:#e07a5f; --rose-soft:#fbe6df; --sky:#5b8fd6; --sky-soft:#e3edfa;
+  --r:16px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.35}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{max-width:720px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 12px) 16px calc(env(safe-area-inset-bottom) + 96px)}
+header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.logo{width:40px;height:40px;border-radius:12px;background:var(--teal);display:grid;place-items:center;font-size:22px;flex:none}
+.htxt{flex:1;min-width:0}
+.htxt h1{font-size:20px;margin:0;letter-spacing:.2px}
+.htxt div{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iconbtn{border:1px solid var(--line);background:var(--card);border-radius:12px;height:40px;min-width:40px;padding:0 10px;font-weight:600;font-size:14px}
+.card{background:var(--card);border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.hero{background:linear-gradient(135deg,#2a8c7e,#3aa695);color:#fff}
+.hero .big{font-size:26px;font-weight:700;margin:2px 0 6px}
+.hero .sub{opacity:.9;font-size:14px}
+.bar{height:10px;background:rgba(255,255,255,.3);border-radius:10px;overflow:hidden;margin-top:12px}
+.bar>i{display:block;height:100%;background:#fff;border-radius:10px;transition:width .3s}
+.focus{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.2);padding:5px 10px;border-radius:20px;font-size:14px;margin-top:10px}
+h2{font-size:15px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin:22px 4px 8px;display:flex;justify-content:space-between;align-items:baseline}
+h2 small{text-transform:none;letter-spacing:0;font-weight:500}
+.list{background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.task{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line);width:100%;text-align:left;background:none;border-left:0;border-right:0;border-bottom:0}
+.task:first-child{border-top:0}
+.chk{width:28px;height:28px;border-radius:9px;border:2px solid #c9cfcd;flex:none;display:grid;place-items:center;transition:all .15s}
+.task.done .chk{background:var(--teal);border-color:var(--teal)}
+.task.done .chk:after{content:"";width:8px;height:14px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-2px)}
+.tbody{flex:1;min-width:0}
+.tname{font-size:16px}
+.task.done .tname{color:var(--muted);text-decoration:line-through;text-decoration-color:#b8c2bf}
+.tmeta{font-size:12.5px;color:var(--muted);margin-top:3px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.pill{font-size:11.5px;padding:2px 7px;border-radius:10px;background:#f0eee8;color:#59625f;white-space:nowrap}
+.pill.fr{background:var(--sky-soft);color:#2f5f9e}
+.pill.ben{background:var(--sun-soft);color:#8a6410}
+.pill.late{background:var(--rose-soft);color:#a24a33}
+.mins{font-size:12.5px;color:var(--muted);flex:none}
+.empty{padding:18px;text-align:center;color:var(--muted);font-size:14px}
+.yay{text-align:center;padding:20px 10px}
+.yay .e{font-size:44px}
+.yay b{display:block;font-size:18px;margin:6px 0 2px}
+nav{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:5}
+nav .in{max-width:720px;margin:0 auto;display:flex}
+nav button{flex:1;border:0;background:none;padding:9px 0 8px;font-size:11.5px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px}
+nav button span{font-size:21px;filter:grayscale(1);opacity:.6}
+nav button.on{color:var(--teal);font-weight:700}
+nav button.on span{filter:none;opacity:1}
+.rooms{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.room{background:var(--card);border-radius:var(--r);padding:14px;border:0;text-align:left;box-shadow:0 1px 2px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:6px;min-height:104px}
+.room .em{font-size:28px}
+.room b{font-size:15px}
+.room small{font-size:12.5px;color:var(--muted)}
+.room small.due{color:#a24a33;font-weight:600}
+.back{border:0;background:none;color:var(--teal);font-weight:600;padding:6px 0;margin-bottom:6px}
+.rhead{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.rhead .em{font-size:38px}
+.rhead h3{margin:0;font-size:22px}
+.x{border:0;background:none;color:#a5aeab;font-size:18px;padding:6px;flex:none}
+.day{display:flex;gap:12px;padding:12px 14px;border-top:1px solid var(--line);align-items:flex-start}
+.day:first-child{border-top:0}
+.day.today{background:var(--teal-soft)}
+.day .dn{width:46px;font-weight:700;flex:none}
+.day .dz{flex:1}
+.day .dz div{font-size:13px;color:var(--muted);margin-top:2px}
+.tip{display:flex;gap:12px}
+.tip .e{font-size:26px;flex:none}
+.tip b{display:block;margin-bottom:3px}
+.tip p{margin:0;color:#4b5755;font-size:14.5px}
+label.f{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
+input[type=text],input[type=number],select,textarea{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
+textarea{font-size:12px;min-height:90px;font-family:ui-monospace,Menlo,Consolas,monospace}
+.row{display:flex;gap:8px}
+.row>*{flex:1}
+.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:600;background:var(--teal);color:#fff}
+.btn.sec{background:#eeebe3;color:var(--ink)}
+.btn.warn{background:var(--rose-soft);color:#a24a33}
+.seg{display:flex;background:#eeebe3;border-radius:12px;padding:3px}
+.seg button{flex:1;border:0;background:none;padding:8px;border-radius:10px;font-weight:600;color:var(--muted)}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.note{font-size:13px;color:var(--muted);margin-top:8px}
+details summary{cursor:pointer;color:var(--muted);font-size:14px;padding:10px 4px}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 78px);transform:translateX(-50%);background:#23302e;color:#fff;padding:9px 16px;border-radius:20px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}
+.toast.show{opacity:1}
+@media (min-width:700px){ .hero .big{font-size:30px} }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<nav><div class="in" id="nav"></div></nav>
+<div class="toast" id="toast"></div>
+<script src="config.js"></script>
+<script>
+"use strict";
+/* ---------- Data ---------- */
+const ROOMS = [
+  {id:"kitchen",  em:"🍳", en:"Kitchen",            et:"Köök"},
+  {id:"wc",       em:"🚽", en:"Small WC",           et:"Väike WC"},
+  {id:"bath",     em:"🛁", en:"Bathroom",           et:"Vannituba"},
+  {id:"hall",     em:"🚪", en:"Hallway",            et:"Esik"},
+  {id:"wardrobe", em:"👕", en:"Wardrobe room",      et:"Garderoob"},
+  {id:"living",   em:"🛋️", en:"Living room",        et:"Elutuba"},
+  {id:"ours",     em:"🛏️", en:"Our bedroom",        et:"Meie magamistuba"},
+  {id:"ben",      em:"🎧", en:"Ben's room",         et:"Beni tuba"},
+  {id:"frank",    em:"🧸", en:"Frank's room",       et:"Franki tuba"},
+  {id:"home",     em:"🏠", en:"Whole home",         et:"Kogu kodu"}
+];
+const R = Object.fromEntries(ROOMS.map(r=>[r.id,r]));
+
+/* Schedule codes: d = daily · wN = weekly on day N (1=Mon..7=Sun) · bP.N = every 2 weeks
+   mW.N = monthly, week W of the month (1-4), day N · qM.W.N = every 3 months (month%3==M) */
+const ZONES = {
+  1:{en:"Kitchen",et:"Köök",em:"🍳"},
+  2:{en:"Bathroom + WC",et:"Vannituba + WC",em:"🛁"},
+  3:{en:"Living room + hallway",et:"Elutuba + esik",em:"🛋️"},
+  4:{en:"Bedrooms",et:"Magamistoad",em:"🛏️"},
+  5:{en:"Wardrobe + laundry",et:"Garderoob + pesu",em:"👕"},
+  6:{en:"Bedding + family reset",et:"Voodipesu + pere koristus",em:"✨"},
+  7:{en:"Rest + plan the week",et:"Puhkus + nädala plaan",em:"☕"}
+};
+// [id, room, schedule, minutes, English, Estonian, helper]
+const BASE = [
+ // ---- Daily
+ ["k-dishes","kitchen","d",10,"Dishes done / dishwasher loaded","Nõud pestud / nõudepesumasin laetud"],
+ ["k-counters","kitchen","d",5,"Wipe counters and stovetop","Pühi tööpinnad ja pliit"],
+ ["k-table","kitchen","d",2,"Wipe the dining table","Pühi söögilaud","frank"],
+ ["k-floor","kitchen","d",3,"Sweep or vacuum under the table","Pühi või tolmuimeja laua alt"],
+ ["k-sink","kitchen","d",2,"Empty and rinse the sink","Tühjenda ja loputa kraanikauss"],
+ ["k-trash","kitchen","d",1,"Take out trash if full","Vii prügi välja, kui täis","ben"],
+ ["wc-quick","wc","d",2,"Quick wipe: sink and toilet seat","Kiire pühkimine: kraanikauss ja prill-laud"],
+ ["wc-paper","wc","d",1,"Check toilet paper and hand towel","Kontrolli WC-paberit ja käterätikut","frank"],
+ ["b-rinse","bath","d",2,"Rinse tub after bath, hang towels to dry","Loputa vann pärast pesu, riputa rätikud kuivama"],
+ ["h-shoes","hall","d",2,"Shoes on the rack, jackets on hooks","Jalanõud riiulisse, joped nagisse","frank"],
+ ["l-toys","living","d",10,"10-minute toy tidy","10-minutiline mänguasjade koristus","frank"],
+ ["l-surf","living","d",3,"Clear tables, fluff cushions","Lauad tühjaks, padjad kohendatud"],
+ ["o-bed","ours","d",2,"Make the bed","Tee voodi korda"],
+ ["o-clothes","ours","d",2,"Clothes to hamper or closet","Riided pesukorvi või kappi"],
+ ["ben-bed","ben","d",3,"Bed made, clothes put away","Voodi tehtud, riided ära pandud","ben"],
+ ["fr-toys","frank","d",5,"Toys back in their boxes","Mänguasjad kastidesse tagasi","frank"],
+ ["h-laundry","home","d",5,"One laundry load (wash, hang or fold)","Üks masinatäis pesu (pese, riputa või volti)"],
+ ["h-reset","home","d",10,"Evening reset: every room back to “ready”","Õhtune kordaseadmine: iga tuba „valmis“ olekusse"],
+ // ---- Monday: kitchen
+ ["k-fronts","kitchen","w1",5,"Wipe appliance fronts and handles","Pühi seadmete esipinnad ja käepidemed","frank"],
+ ["k-micro","kitchen","w1",5,"Clean the microwave inside","Puhasta mikrolaineahi seest"],
+ ["k-fridge","kitchen","w1",10,"Fridge: toss old food, wipe shelves","Külmik: vana toit välja, pühi riiulid"],
+ ["k-sinkd","kitchen","w1",5,"Scrub sink and tap, clean the drain","Küüri kraanikauss ja kraan, puhasta äravool"],
+ ["k-vac","kitchen","w1",5,"Vacuum the kitchen floor","Tolmuimeja köögipõrandal"],
+ ["k-mop","kitchen","w1",10,"Mop the kitchen floor","Pese köögipõrand"],
+ ["k-towels","kitchen","w1",2,"Fresh dish towels and sponge","Puhtad köögirätikud ja nõudekäsn"],
+ // ---- Tuesday: bathrooms
+ ["b-tub","bath","w2",10,"Scrub tub and tiles","Küüri vann ja plaadid"],
+ ["b-sink","bath","w2",5,"Clean sink, tap and mirror","Puhasta kraanikauss, kraan ja peegel","frank"],
+ ["b-toilet","bath","w2",5,"Clean the toilet inside and out","Puhasta WC-pott seest ja väljast"],
+ ["b-floor","bath","w2",5,"Vacuum and mop the floor","Tolmuimeja ja põrandapesu"],
+ ["b-towels","bath","w2",2,"Change towels and bath mat","Vaheta käterätikud ja vannimatt"],
+ ["b-bin","bath","w2",1,"Empty the bin","Tühjenda prügikast","ben"],
+ ["wc-toilet","wc","w2",5,"Clean the toilet inside and out","Puhasta WC-pott seest ja väljast"],
+ ["wc-sink","wc","w2",3,"Clean sink, tap and mirror","Puhasta kraanikauss, kraan ja peegel","frank"],
+ ["wc-floor","wc","w2",3,"Mop the floor","Pese põrand"],
+ ["wc-towel","wc","w2",1,"Fresh hand towel, empty the bin","Puhas käterätik, tühjenda prügikast"],
+ // ---- Wednesday: living room + hallway
+ ["l-dust","living","w3",10,"Dust shelves, TV and surfaces (top to bottom)","Pühi tolm riiulitelt, telerilt ja pindadelt (ülevalt alla)"],
+ ["l-vac","living","w3",10,"Vacuum floor and rug","Tolmuimeja põrandal ja vaibal","ben"],
+ ["l-sofa","living","w3",5,"Vacuum sofa and under cushions","Tolmuimeja diivanil ja patjade all"],
+ ["l-touch","living","w3",3,"Wipe remotes, switches and door handles","Pühi puldid, lülitid ja ukselingid","frank"],
+ ["l-plants","living","w3",3,"Water the plants","Kasta taimi","frank"],
+ ["h-vac","hall","w3",5,"Vacuum and mop the hallway","Tolmuimeja ja põrandapesu esikus"],
+ ["h-mat","hall","w3",2,"Shake out the doormat","Raputa uksematt puhtaks","ben"],
+ ["h-rack","hall","w3",3,"Wipe the shoe rack, sort shoes","Pühi jalanõuderiiul, sorteeri jalanõud","frank"],
+ // ---- Thursday: bedrooms
+ ["o-dust","ours","w4",5,"Dust surfaces and nightstands","Pühi tolm pindadelt ja öökappidelt"],
+ ["o-vac","ours","w4",5,"Vacuum, incl. along the bed edges","Tolmuimeja, ka voodi äärte alt"],
+ ["ben-dust","ben","w4",5,"Dust desk and shelves","Pühi tolm laualt ja riiulitelt"],
+ ["ben-vac","ben","w4",5,"Vacuum the floor","Tolmuimeja põrandal","ben"],
+ ["fr-dust","frank","w4",5,"Dust the shelves","Pühi tolm riiulitelt"],
+ ["fr-vac","frank","w4",5,"Vacuum the floor","Tolmuimeja põrandal"],
+ ["fr-sort","frank","w4",5,"Sort toys into the right boxes","Sorteeri mänguasjad õigetesse kastidesse","frank"],
+ // ---- Friday: wardrobe + laundry
+ ["wr-fold","wardrobe","w5",15,"Fold and put away all clean laundry","Volti ja pane ära kogu puhas pesu","frank"],
+ ["wr-vac","wardrobe","w5",5,"Vacuum the wardrobe room floor","Tolmuimeja garderoobi põrandal"],
+ ["wr-tidy","wardrobe","w5",5,"Tidy shelves, hang loose clothes","Korrasta riiulid, riputa lahtised riided"],
+ // ---- Saturday
+ ["h-bedding","home","w6",20,"Change bed linen in all bedrooms","Vaheta voodipesu kõigis magamistubades"],
+ ["h-family","home","w6",30,"Family 30-minute reset (everyone helps)","Pere 30-minutiline koristus (kõik aitavad)","both"],
+ ["h-recycle","home","w6",5,"Recycling out: paper, plastic, glass","Taaskasutus välja: paber, plast, klaas","ben"],
+ // ---- Sunday
+ ["h-plan","home","w7",10,"Plan the week: meals, shopping, extra jobs","Planeeri nädal: söögid, ostud, lisatööd"],
+ // ---- Monthly
+ ["k-oven","kitchen","m1.1",20,"Clean the oven","Puhasta ahi"],
+ ["b-descale","bath","m1.2",10,"Descale taps and shower head","Eemalda katlakivi kraanidelt ja dušiotsikult"],
+ ["l-under","living","m1.3",15,"Vacuum under and behind sofa and furniture","Tolmuimeja diivani ja mööbli alt ning tagant"],
+ ["o-mattress","ours","m1.4",15,"Vacuum mattresses (all beds)","Tolmuimeja madratsitel (kõik voodid)"],
+ ["h-radiators","home","m1.5",10,"Dust radiators and air vents","Pühi radiaatorid ja ventilatsioonirestid"],
+ ["k-dishwasher","kitchen","m2.1",10,"Clean the dishwasher filter","Puhasta nõudepesumasina filter"],
+ ["b-drains","bath","m2.2",10,"Clean drains (tub and sinks)","Puhasta äravoolud (vann ja kraanikausid)"],
+ ["l-skirting","living","m2.3",15,"Dust skirting boards and lamps","Pühi põrandaliistud ja lambid"],
+ ["ben-declutter","ben","m2.4",15,"Declutter: things he no longer uses","Korrasta: asjad, mida ta enam ei kasuta","ben"],
+ ["wr-donate","wardrobe","m2.5",15,"Fill one donate bag","Täida üks annetuskott"],
+ ["k-kettle","kitchen","m2.7",5,"Descale the kettle","Eemalda veekeetjast katlakivi"],
+ ["k-cabinets","kitchen","m3.1",15,"Wipe cabinet doors","Pühi kapiuksed","frank"],
+ ["b-grout","bath","m3.2",15,"Scrub grout and silicone","Küüri vuugid ja silikoon"],
+ ["h-doors","hall","m3.3",10,"Wipe doors, frames and light switches","Pühi uksed, piirdelauad ja lülitid","frank"],
+ ["fr-rotate","frank","m3.4",15,"Sort toys, put some away to rotate later","Sorteeri mänguasjad, pane osa puhkama","frank"],
+ ["h-vacfilter","home","m3.5",5,"Empty and clean the vacuum filter","Puhasta tolmuimeja ja selle filter"],
+ ["k-bins","kitchen","m4.1",10,"Wash the trash bins","Pese prügikastid"],
+ ["b-mats","bath","m4.2",5,"Wash bath mats and shower curtain","Pese vannimatid ja dušikardin"],
+ ["l-sills","living","m4.3",10,"Wipe windowsills (all rooms)","Pühi aknalauad (kõik toad)","frank"],
+ ["o-high","ours","m4.4",10,"Dust ceiling corners and light fittings (bedrooms)","Pühi laenurgad ja valgustid (magamistoad)"],
+ ["wr-shelves","wardrobe","m4.5",10,"Wipe wardrobe shelves","Pühi garderoobi riiulid"],
+ ["h-smoke","home","m4.6",2,"Test smoke alarms","Testi suitsuandureid","ben"],
+ // ---- Every 3 months
+ ["h-windows","home","q0.1.6",60,"Wash windows inside","Pese aknad seest"],
+ ["h-curtains","home","q0.2.6",20,"Wash curtains","Pese kardinad"],
+ ["h-pillows","home","q1.1.6",20,"Wash pillows and duvets","Pese padjad ja tekid"],
+ ["k-behind","kitchen","q1.2.6",20,"Clean behind fridge and stove","Puhasta külmiku ja pliidi tagant"],
+ ["k-freezer","kitchen","q2.1.6",30,"Defrost and clean the freezer","Sulata ja puhasta sügavkülmik"],
+ ["o-rotate","ours","q2.2.6",10,"Rotate mattresses","Pööra madratsid ringi"],
+ ["wr-season","wardrobe","q2.3.6",30,"Seasonal swap, outgrown kids' clothes out","Hooajavahetus, kasvatud lasteriided välja"]
+];
+
+/* ---------- Text ---------- */
+const T = {
+ en:{today:"Today",rooms:"Rooms",plan:"Plan",tips:"Tips",daily:"Every day",focus:"Today's focus",catchup:"Catch up",
+   catchupHint:"Missed earlier. Do one if you have time, skip the rest.",left:"min left",allDone:"All done for today!",
+   allDoneSub:"The home is in order. Enjoy the evening.",of:"of",tasks:"tasks",due:"to do today",allok:"All in order",
+   weekly:"Every week",biweekly:"Every 2 weeks",monthly:"Every month",quarterly:"Every 3 months",
+   lastDone:"done",never:"not done yet",todayW:"today",yesterday:"yesterday",daysAgo:"d ago",
+   hidden:"Hidden tasks",hide:"Hide",restore:"Restore",del:"Delete",addTask:"Add a task",taskName:"What needs doing?",
+   howOften:"How often",day:"Day",week:"Week of the month",minutes:"Minutes",add:"Add",
+   weekPlan:"Week plan",weekPlanSub:"One focus area a day keeps it light.",thisMonth:"Extras this month",
+   settings:"Settings",language:"Language",helpers:"Show kids' helper jobs",on:"On",off:"Off",
+   backup:"Backup",backupHint:"Progress is saved in this browser only. To move it to another device, copy the code here and paste it there.",
+   copy:"Copy code",import:"Load code",paste:"Paste code here",reset:"Start fresh",resetConfirm:"Tap again to erase all progress",
+   copied:"Copied",loaded:"Loaded",bad:"That code didn't work",added:"Task added",
+   nth:["","1st","2nd","3rd","4th"],every:"every",frankHelp:"Frank",benHelp:"Ben",bothHelp:"Ben + Frank",
+   home:"Home: 116.4 m² · 9 rooms",none:"Nothing extra today.",done:"Done",more:"more",
+   sync:"Family sync",syncOff:"Sync isn't switched on for this copy of the app yet.",
+   syncIntro:"Share one list with the whole family. Start a family list on one phone, then type its code on the others.",
+   famNew:"Start a family list",famJoin:"Join",famCodePh:"Family code, e.g. ABCD-1234",famLeave:"Stop syncing on this device",
+   famCode:"Family code",famHint:"Type this code on every phone or laptop that should share the list.",
+   online:"Synced",offline:"Offline, will sync when back online",connecting:"Connecting…",badCode:"Codes have 8 letters/numbers",joined:"Joined the family list"},
+ et:{today:"Täna",rooms:"Toad",plan:"Plaan",tips:"Nõuanded",daily:"Iga päev",focus:"Tänane fookus",catchup:"Järeletegemine",
+   catchupHint:"Varem tegemata. Tee üks, kui aega on, ülejäänu jäta vahele.",left:"min jäänud",allDone:"Tänaseks kõik tehtud!",
+   allDoneSub:"Kodu on korras. Naudi õhtut.",of:"/",tasks:"tööd",due:"täna teha",allok:"Kõik korras",
+   weekly:"Iga nädal",biweekly:"Iga 2 nädala järel",monthly:"Iga kuu",quarterly:"Iga 3 kuu järel",
+   lastDone:"tehtud",never:"veel tegemata",todayW:"täna",yesterday:"eile",daysAgo:"p tagasi",
+   hidden:"Peidetud tööd",hide:"Peida",restore:"Taasta",del:"Kustuta",addTask:"Lisa töö",taskName:"Mida on vaja teha?",
+   howOften:"Kui tihti",day:"Päev",week:"Kuu nädal",minutes:"Minutit",add:"Lisa",
+   weekPlan:"Nädala plaan",weekPlanSub:"Üks fookusala päevas hoiab koormuse väikese.",thisMonth:"Selle kuu lisatööd",
+   settings:"Seaded",language:"Keel",helpers:"Näita laste abitöid",on:"Sees",off:"Väljas",
+   backup:"Varukoopia",backupHint:"Edenemine salvestub ainult selles brauseris. Teise seadmesse viimiseks kopeeri siit kood ja kleebi see seal.",
+   copy:"Kopeeri kood",import:"Laadi kood",paste:"Kleebi kood siia",reset:"Alusta otsast",resetConfirm:"Vajuta uuesti, et kõik kustutada",
+   copied:"Kopeeritud",loaded:"Laaditud",bad:"See kood ei sobinud",added:"Töö lisatud",
+   nth:["","1.","2.","3.","4."],every:"iga",frankHelp:"Frank",benHelp:"Ben",bothHelp:"Ben + Frank",
+   home:"Kodu: 116,4 m² · 9 tuba",none:"Täna lisatöid pole.",done:"Tehtud",more:"veel",
+   sync:"Pere sünkroonimine",syncOff:"Sünkroonimine pole selles rakenduses veel sisse lülitatud.",
+   syncIntro:"Jaga ühte nimekirja kogu perega. Loo pere nimekiri ühes telefonis ja sisesta selle kood teistes.",
+   famNew:"Loo pere nimekiri",famJoin:"Liitu",famCodePh:"Pere kood, nt ABCD-1234",famLeave:"Lõpeta selles seadmes sünkroonimine",
+   famCode:"Pere kood",famHint:"Sisesta see kood igas telefonis või arvutis, mis peab sama nimekirja jagama.",
+   online:"Sünkroonitud",offline:"Võrguühenduseta, sünkroonib kui võrk tagasi",connecting:"Ühendan…",badCode:"Koodis on 8 tähte/numbrit",joined:"Liitusid pere nimekirjaga"}
+};
+const DAYS = {en:["","Mon","Tue","Wed","Thu","Fri","Sat","Sun"],et:["","E","T","K","N","R","L","P"]};
+const DAYS_LONG = {en:["","Mondays","Tuesdays","Wednesdays","Thursdays","Fridays","Saturdays","Sundays"],
+  et:["","esmaspäeviti","teisipäeviti","kolmapäeviti","neljapäeviti","reedeti","laupäeviti","pühapäeviti"]};
+const DAY_ONE = {en:["","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+  et:["","esmaspäev","teisipäev","kolmapäev","neljapäev","reede","laupäev","pühapäev"]};
+const MONTHS_Q = {en:["Jan, Apr, Jul, Oct","Feb, May, Aug, Nov","Mar, Jun, Sep, Dec"],
+  et:["jaan, apr, juuli, okt","veebr, mai, aug, nov","märts, juuni, sept, dets"]};
+const TIPS = [
+ ["🌙","Evening reset, 10 minutes","Õhtune 10 minutit",
+  "Before bed, walk through the home and put things back. A tidy start makes the morning calm and keeps clutter from piling up.",
+  "Enne magamaminekut käi kodu läbi ja pane asjad oma kohale. Korras algus teeb hommiku rahulikuks ja segadus ei kuhju."],
+ ["✋","Don't put it down, put it away","Ära pane maha, pane ära",
+  "Handling something once is faster than twice. Coats on hooks, cups straight into the dishwasher, toys back in their box.",
+  "Üks kord käsitseda on kiirem kui kaks. Jope nagisse, tass otse nõudepesumasinasse, mänguasi oma kasti."],
+ ["⬇️","Top to bottom, dry to wet","Ülevalt alla, kuivast märjani",
+  "Dust first, then vacuum, then mop. Dust falls down, so cleaning in this order means you never do a job twice.",
+  "Kõigepealt tolm, siis tolmuimeja, siis põrandapesu. Tolm langeb alla, nii ei pea ühtegi tööd kaks korda tegema."],
+ ["📅","One focus area a day","Üks fookusala päevas",
+  "Nobody cleans the whole home at once. The daily list keeps it livable; the day's focus keeps it clean. That's about 20–30 extra minutes.",
+  "Keegi ei korista kogu kodu korraga. Igapäevane nimekiri hoiab kodu elamiskõlbulikuna, päeva fookus hoiab puhtana. See on umbes 20–30 lisaminutit."],
+ ["💦","Frank's spray bottle job","Franki pihustipudeli töö",
+  "Give Frank his own spray bottle with plain water and a cloth. Mirrors, the table, cabinet doors and windowsills are perfect for him. Tasks marked 💦 suit him.",
+  "Anna Frankile oma pihustipudel puhta veega ja lapp. Peeglid, laud, kapiuksed ja aknalauad sobivad talle ideaalselt. 💦 märgiga tööd sobivad talle."],
+ ["⭐","Ben's own jobs","Beni oma tööd",
+  "Tasks marked ⭐ are ones Ben can own: trash, recycling, the doormat, vacuuming his room. Owning a job works better than “helping”.",
+  "⭐ märgiga tööd saab Ben enda omaks võtta: prügi, taaskasutus, uksematt, oma toa tolmuimemine. Oma töö toimib paremini kui „aitamine“."],
+ ["🧺","One laundry load a day","Üks masinatäis päevas",
+  "A small load every day never becomes a mountain. Start it in the morning, hang it after work, fold on Friday.",
+  "Väike masinatäis iga päev ei kasva kunagi mäeks. Pane hommikul käima, riputa pärast tööd, volti reedel."],
+ ["🧴","A caddy in each bathroom","Korv igas vannitoas",
+  "Keep a cloth, spray and toilet brush in both the WC and the bathroom. When supplies are right there, a 2-minute wipe actually happens.",
+  "Hoia lappi, pihustit ja WC-harja nii WC-s kui vannitoas. Kui vahendid on käepärast, saab 2-minutiline pühkimine päriselt tehtud."],
+ ["🚪","Stop dirt at the door","Peata mustus uksel",
+  "A good doormat and shoes off in the hallway keep most of the dirt out of the other 100+ m². Shake the mat weekly.",
+  "Hea uksematt ja jalanõud esikus hoiavad suurema osa mustusest ülejäänud 100+ m²-st eemal. Raputa matti iga nädal."],
+ ["🌱","Missed a day? Just skip it","Päev jäi vahele? Lihtsalt jäta",
+  "Don't double up. Missed jobs wait in “Catch up”, and next week the same day comes round again. Good enough beats perfect.",
+  "Ära tee topelt. Tegemata tööd ootavad „Järeletegemise“ all ja järgmisel nädalal tuleb sama päev uuesti. Piisavalt hea on parem kui täiuslik."]
+];
+
+/* ---------- State ---------- */
+const KEY="kodukord-v1";
+const pad=n=>String(n).padStart(2,"0");
+const iso=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const parse=s=>{const[a,b,c]=s.split("-").map(Number);return new Date(a,b-1,c)};
+const addD=(d,n)=>{const x=new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);return x};
+const dow=d=>((d.getDay()+6)%7)+1;
+const daysBetween=(a,b)=>Math.round((parse(b)-parse(a))/864e5);
+
+let S;
+function load(){
+  try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
+  if(!S||typeof S!=="object")S={};
+  S.start=S.start||iso(new Date());
+  S.lang=S.lang||((navigator.language||"").toLowerCase().startsWith("et")?"et":"en");
+  S.done=S.done||{}; S.hidden=S.hidden||[]; S.custom=S.custom||[];
+  if(S.helpers===undefined)S.helpers=true;
+  save();
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+
+function parseSched(s){
+  if(s==="d")return{t:"d",iv:1,gr:0};
+  if(s[0]==="w")return{t:"w",dow:+s.slice(1),iv:7,gr:3};
+  const p=s.slice(1).split(".").map(Number);
+  if(s[0]==="b")return{t:"b",par:p[0],dow:p[1],iv:14,gr:6};
+  if(s[0]==="m")return{t:"m",wk:p[0],dow:p[1],iv:30,gr:14};
+  if(s[0]==="q")return{t:"q",mm:p[0],wk:p[1],dow:p[2],iv:91,gr:30};
+}
+function tasks(){
+  const all=BASE.map(a=>({id:a[0],room:a[1],s:a[2],min:a[3],en:a[4],et:a[5],help:a[6]||null}))
+    .concat(S.custom.map(c=>({...c,custom:true})));
+  all.forEach(t=>t.sp=parseSched(t.s));
+  return all;
+}
+function planned(t,d){
+  const p=t.sp;
+  if(p.t==="d")return true;
+  if(dow(d)!==p.dow)return false;
+  if(p.t==="w")return true;
+  if(p.t==="b"){const wk=Math.floor(Math.round((d-new Date(2024,0,1))/864e5)/7);return wk%2===p.par}
+  const wom=Math.ceil(d.getDate()/7);
+  if(p.t==="m")return wom===p.wk;
+  if(p.t==="q")return d.getMonth()%3===p.mm&&wom===p.wk;
+}
+function prevOcc(t,d){for(let i=0;i<120;i++){const x=addD(d,-i);if(planned(t,x))return iso(x)}return null}
+function nextOcc(t,d){for(let i=0;i<120;i++){const x=addD(d,i);if(planned(t,x))return iso(x)}return null}
+function last(t){return S.done[t.id]&&S.done[t.id].l||null}
+function doneFor(t,occ){const l=last(t);return !!l&&l>=iso(addD(parse(occ),-t.sp.gr))}
+function toggle(t,isDone){
+  const rec=S.done[t.id]||{};
+  if(isDone)S.done[t.id]={l:rec.p||null,p:null};
+  else S.done[t.id]={l:iso(new Date()),p:rec.l||null};
+  save();push({["done/"+t.id]:S.done[t.id]});
+}
+
+/* ---------- Today model ---------- */
+function todayModel(){
+  const now=new Date(),td=iso(now),yd=addD(now,-1);
+  const daily=[],focus=[],catchup=[];
+  for(const t of tasks()){
+    if(S.hidden.includes(t.id))continue;
+    if(t.sp.t==="d"){daily.push({t,done:last(t)===td});continue}
+    if(planned(t,now)){focus.push({t,done:doneFor(t,td)});continue}
+    const p=prevOcc(t,yd);
+    if(p&&p>=S.start&&daysBetween(p,td)<=(t.sp.iv>14?13:6)){
+      const dn=doneFor(t,p);
+      if(!dn)catchup.push({t,done:false,occ:p});
+      else if(last(t)===td)catchup.push({t,done:true,occ:p});
+    }
+  }
+  catchup.sort((a,b)=>a.occ<b.occ?1:-1);
+  return{daily,focus,catchup};
+}
+
+/* ---------- Render helpers ---------- */
+const L=()=>T[S.lang];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const nm=t=>esc(t[S.lang]||t.en);
+function ago(t){
+  const l=last(t);if(!l)return L().never;
+  const n=daysBetween(l,iso(new Date()));
+  return L().lastDone+" "+(n<=0?L().todayW:n===1?L().yesterday:n+" "+L().daysAgo);
+}
+function schedLabel(t){
+  const p=t.sp,lg=S.lang,l=L();
+  if(p.t==="d")return l.daily;
+  if(p.t==="w")return DAYS_LONG[lg][p.dow].replace(/^./,c=>c.toUpperCase());
+  if(p.t==="b")return l.biweekly+", "+DAY_ONE[lg][p.dow];
+  if(p.t==="m")return lg==="et"?`Kuu ${p.wk}. ${DAY_ONE.et[p.dow]}`:`${l.nth[p.wk]} ${DAY_ONE.en[p.dow]} of the month`;
+  if(p.t==="q")return lg==="et"?`${MONTHS_Q.et[p.mm]}: ${p.wk}. ${DAY_ONE.et[p.dow]}`:`${MONTHS_Q.en[p.mm]}: ${l.nth[p.wk]} ${DAY_ONE.en[p.dow]}`;
+}
+function helpPill(t){
+  if(!S.helpers||!t.help)return"";
+  if(t.help==="frank")return`<span class="pill fr">💦 ${L().frankHelp}</span>`;
+  if(t.help==="ben")return`<span class="pill ben">⭐ ${L().benHelp}</span>`;
+  return`<span class="pill ben">⭐💦 ${L().bothHelp}</span>`;
+}
+function row(item,ctx){
+  const t=item.t,r=R[t.room];
+  let meta=`<span>${r.em} ${esc(r[S.lang])}</span>`;
+  if(ctx==="catch"){const n=daysBetween(item.occ,iso(new Date()));meta+=`<span class="pill late">${DAY_ONE[S.lang][dow(parse(item.occ))]}${n>6?" · "+n+" "+L().daysAgo:""}</span>`}
+  if(ctx==="room")meta=`<span>${esc(schedLabel(t))}</span><span>· ${ago(t)}</span>`;
+  meta+=helpPill(t);
+  const extra=ctx==="room"?`<button class="x" data-hide="${t.id}" title="${t.custom?L().del:L().hide}">${t.custom?"🗑":"✕"}</button>`:"";
+  return`<div class="task ${item.done?"done":""}" data-id="${t.id}" data-done="${item.done?1:0}" role="button" tabindex="0">
+    <span class="chk"></span><div class="tbody"><div class="tname">${nm(t)}</div><div class="tmeta">${meta}</div></div>
+    <span class="mins">${t.min}′</span>${extra}</div>`;
+}
+
+/* ---------- Views ---------- */
+let catchOpen=false,view="today",openRoom=null,resetArm=false;
+function render(){
+  document.documentElement.lang=S.lang;
+  const l=L(),now=new Date();
+  const dateStr=now.toLocaleDateString(S.lang==="et"?"et-EE":"en-GB",{weekday:"long",day:"numeric",month:"long"});
+  let h=`<header><div class="logo">🏡</div><div class="htxt"><h1>Kodukord</h1><div>${esc(dateStr.charAt(0).toUpperCase()+dateStr.slice(1))}</div></div>
+    <button class="iconbtn" id="lang">${S.lang==="et"?"EN":"ET"}</button><button class="iconbtn" id="gear" aria-label="${l.settings}">⚙︎</button></header>`;
+  if(view==="today")h+=vToday();
+  else if(view==="rooms")h+=openRoom?vRoom(openRoom):vRooms();
+  else if(view==="plan")h+=vPlan();
+  else if(view==="tips")h+=vTips();
+  else if(view==="settings")h+=vSettings();
+  document.getElementById("app").innerHTML=h;
+  const tabs=[["today","✅",l.today],["rooms","🚪",l.rooms],["plan","📅",l.plan],["tips","💡",l.tips]];
+  document.getElementById("nav").innerHTML=tabs.map(([k,e,n])=>`<button data-tab="${k}" class="${view===k?"on":""}"><span>${e}</span>${n}</button>`).join("");
+}
+function vToday(){
+  const l=L(),m=todayModel(),z=ZONES[dow(new Date())];
+  const all=[...m.daily,...m.focus],done=all.filter(x=>x.done).length;
+  const left=all.filter(x=>!x.done).reduce((a,x)=>a+x.t.min,0);
+  const pct=all.length?Math.round(done/all.length*100):0;
+  let h=`<div class="card hero"><div class="sub">${done} ${l.of} ${all.length} ${l.tasks}</div>
+    <div class="big">${pct===100?"🎉 "+l.done:"≈ "+left+" "+l.left}</div>
+    <div class="bar"><i style="width:${pct}%"></i></div>
+    <div class="focus">${z.em} ${l.focus}: <b>${esc(z[S.lang])}</b></div></div>`;
+  if(pct===100&&!m.catchup.some(x=>!x.done))h+=`<div class="card yay"><div class="e">✨🏡✨</div><b>${l.allDone}</b><span class="note">${l.allDoneSub}</span></div>`;
+  h+=`<h2>${z.em} ${l.focus}<small>${m.focus.filter(x=>!x.done).reduce((a,x)=>a+x.t.min,0)}′</small></h2>`;
+  h+=m.focus.length?`<div class="list">${sortDone(m.focus).map(x=>row(x)).join("")}</div>`:`<div class="list"><div class="empty">${l.none}</div></div>`;
+  h+=`<h2>☀️ ${l.daily}<small>${m.daily.filter(x=>!x.done).reduce((a,x)=>a+x.t.min,0)}′</small></h2>`;
+  h+=`<div class="list">${sortDone(m.daily).map(x=>row(x)).join("")}</div>`;
+  if(m.catchup.length){
+    h+=`<h2>🕓 ${l.catchup}<small>${m.catchup.filter(x=>!x.done).length}</small></h2><div class="note" style="margin:-4px 4px 8px">${l.catchupHint}</div>`;
+    const first=m.catchup.slice(0,4),rest=m.catchup.slice(4);
+    h+=`<div class="list">${first.map(x=>row(x,"catch")).join("")}</div>`;
+    if(rest.length)h+=`<details${catchOpen?" open":""} id="more"><summary>+ ${rest.length} ${l.more}</summary><div class="list">${rest.map(x=>row(x,"catch")).join("")}</div></details>`;
+  }
+  return h;
+}
+const sortDone=a=>a.slice().sort((x,y)=>x.done-y.done);
+function roomDue(id){const m=todayModel();return[...m.daily,...m.focus,...m.catchup].filter(x=>x.t.room===id&&!x.done).length}
+function vRooms(){
+  const l=L();
+  return`<div class="note" style="margin:0 4px 12px">${l.home}</div><div class="rooms">${ROOMS.map(r=>{
+    const n=roomDue(r.id);
+    return`<button class="room" data-room="${r.id}"><span class="em">${r.em}</span><b>${esc(r[S.lang])}</b>
+      <small class="${n?"due":""}">${n?n+" "+l.due:"✓ "+l.allok}</small></button>`}).join("")}</div>`;
+}
+function vRoom(id){
+  const l=L(),r=R[id],td=iso(new Date());
+  const ts=tasks().filter(t=>t.room===id);
+  const vis=ts.filter(t=>!S.hidden.includes(t.id)),hid=ts.filter(t=>S.hidden.includes(t.id));
+  const isDone=t=>t.sp.t==="d"?last(t)===td:(!!last(t)&&daysBetween(last(t),td)<t.sp.iv);
+  const groups=[["d",l.daily],["w",l.weekly],["b",l.biweekly],["m",l.monthly],["q",l.quarterly]];
+  let h=`<button class="back" id="back">‹ ${l.rooms}</button><div class="rhead"><span class="em">${r.em}</span><h3>${esc(r[S.lang])}</h3></div>`;
+  for(const[k,name]of groups){
+    const g=vis.filter(t=>t.sp.t===k);if(!g.length)continue;
+    h+=`<h2>${name}<small>${g.reduce((a,t)=>a+t.min,0)}′</small></h2><div class="list">${g.map(t=>row({t,done:isDone(t)},"room")).join("")}</div>`;
+  }
+  if(hid.length)h+=`<details><summary>${l.hidden} (${hid.length})</summary><div class="list">${hid.map(t=>`<div class="task"><div class="tbody"><div class="tname" style="color:var(--muted)">${nm(t)}</div></div><button class="btn sec" data-restore="${t.id}">${l.restore}</button></div>`).join("")}</div></details>`;
+  const dopt=[1,2,3,4,5,6,7].map(i=>`<option value="${i}">${DAY_ONE[S.lang][i]}</option>`).join("");
+  h+=`<h2>${l.addTask}</h2><div class="card"><form id="addf">
+    <input type="text" id="an" placeholder="${l.taskName}" maxlength="80" required>
+    <div class="row"><div><label class="f">${l.howOften}</label><select id="af">
+      <option value="d">${l.daily}</option><option value="w" selected>${l.weekly}</option><option value="b">${l.biweekly}</option><option value="m">${l.monthly}</option></select></div>
+      <div><label class="f">${l.minutes}</label><input type="number" id="am" value="5" min="1" max="240"></div></div>
+    <div class="row" id="adw"><div><label class="f">${l.day}</label><select id="ad">${dopt}</select></div>
+      <div id="awk" style="display:none"><label class="f">${l.week}</label><select id="aw"><option>1</option><option>2</option><option>3</option><option>4</option></select></div></div>
+    <button class="btn" style="width:100%;margin-top:12px">${l.add}</button></form></div>`;
+  return h;
+}
+function vPlan(){
+  const l=L(),now=new Date(),td=dow(now),all=tasks().filter(t=>!S.hidden.includes(t.id));
+  const mon=addD(now,1-td);
+  let h=`<h2 style="margin-top:4px">${l.weekPlan}</h2><div class="note" style="margin:-4px 4px 8px">${l.weekPlanSub}</div><div class="list">`;
+  for(let i=1;i<=7;i++){
+    const d=addD(mon,i-1),z=ZONES[i];
+    const extra=all.filter(t=>t.sp.t!=="d"&&planned(t,d));
+    const mins=extra.reduce((a,t)=>a+t.min,0);
+    h+=`<div class="day ${i===td?"today":""}"><div class="dn">${DAYS[S.lang][i]} ${d.getDate()}</div><div class="dz"><b>${z.em} ${esc(z[S.lang])}</b>
+      <div>${extra.length} ${l.tasks} · ${mins}′${extra.some(t=>t.sp.t!=="w"&&t.sp.t!=="b")?" · +"+extra.filter(t=>t.sp.t==="m"||t.sp.t==="q").map(nm).join(", "):""}</div></div></div>`;
+  }
+  h+=`</div>`;
+  // month extras
+  const y=now.getFullYear(),mo=now.getMonth(),days=new Date(y,mo+1,0).getDate(),items=[];
+  for(let dd=1;dd<=days;dd++){const d=new Date(y,mo,dd);for(const t of all)if((t.sp.t==="m"||t.sp.t==="q")&&planned(t,d))items.push({t,d})}
+  h+=`<h2>${l.thisMonth}</h2><div class="list">${items.map(({t,d})=>{
+    const isd=doneFor(t,iso(d)),r=R[t.room];
+    return`<div class="task ${isd?"done":""}" data-id="${t.id}" data-done="${isd?1:0}" role="button" tabindex="0"><span class="chk"></span><div class="tbody"><div class="tname">${nm(t)}</div>
+      <div class="tmeta"><span>${DAYS[S.lang][dow(d)]} ${d.getDate()}.${d.getMonth()+1}</span><span>· ${r.em} ${esc(r[S.lang])}</span>${helpPill(t)}</div></div><span class="mins">${t.min}′</span></div>`}).join("")}</div>`;
+  return h;
+}
+function vTips(){
+  const et=S.lang==="et";
+  return TIPS.map(t=>`<div class="card tip"><span class="e">${t[0]}</span><div><b>${et?t[2]:t[1]}</b><p>${et?t[4]:t[3]}</p></div></div>`).join("");
+}
+function vSettings(){
+  const l=L();
+  return`<button class="back" id="back">‹ ${l.today}</button><h2 style="margin-top:4px">${l.settings}</h2>
+  <div class="card"><label class="f" style="margin-top:0">${l.language}</label>
+    <div class="seg"><button data-setlang="et" class="${S.lang==="et"?"on":""}">Eesti</button><button data-setlang="en" class="${S.lang==="en"?"on":""}">English</button></div>
+    <label class="f">${l.helpers} (💦 Frank, ⭐ Ben)</label>
+    <div class="seg"><button data-help="1" class="${S.helpers?"on":""}">${l.on}</button><button data-help="0" class="${!S.helpers?"on":""}">${l.off}</button></div></div>
+  <h2>👨‍👩‍👦‍👦 ${l.sync}</h2><div class="card">${syncCard()}</div>
+  <h2>${l.backup}</h2><div class="card"><div class="note" style="margin:0 0 10px">${l.backupHint}</div>
+    <button class="btn" id="copy" style="width:100%">${l.copy}</button>
+    <textarea id="imp" placeholder="${l.paste}" style="margin-top:12px"></textarea>
+    <button class="btn sec" id="load" style="width:100%;margin-top:8px">${l.import}</button></div>
+  <div class="card"><button class="btn warn" id="reset" style="width:100%">${resetArm?l.resetConfirm:l.reset}</button></div>`;
+}
+
+/* ---------- Events ---------- */
+let toastT;
+function toast(s){const e=document.getElementById("toast");e.textContent=s;e.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove("show"),1600)}
+function findTask(id){return tasks().find(t=>t.id===id)}
+document.addEventListener("click",e=>{
+  const el=e.target.closest("[data-hide],[data-restore],[data-id],[data-tab],[data-room],[data-setlang],[data-help],#lang,#gear,#back,#copy,#load,#reset,#famnew,#famjoin,#famleave");
+  if(!el)return;
+  if(el.dataset.hide){
+    const id=el.dataset.hide,t=findTask(id);
+    if(t&&t.custom){S.custom=S.custom.filter(c=>c.id!==id);delete S.done[id];push({custom:S.custom,["done/"+id]:null})}
+    else if(!S.hidden.includes(id)){S.hidden.push(id);push({hidden:S.hidden})}
+    save();render();return;
+  }
+  if(el.dataset.restore){S.hidden=S.hidden.filter(x=>x!==el.dataset.restore);save();push({hidden:S.hidden});render();return}
+  if(el.dataset.id){const t=findTask(el.dataset.id);if(t){toggle(t,el.dataset.done==="1");if(navigator.vibrate&&el.dataset.done!=="1")try{navigator.vibrate(12)}catch(_){};render()}return}
+  if(el.dataset.tab){view=el.dataset.tab;openRoom=null;resetArm=false;render();scrollTo(0,0);return}
+  if(el.dataset.room){openRoom=el.dataset.room;render();scrollTo(0,0);return}
+  if(el.dataset.setlang){S.lang=el.dataset.setlang;save();render();return}
+  if(el.dataset.help){S.helpers=el.dataset.help==="1";save();render();return}
+  switch(el.id){
+    case"lang":S.lang=S.lang==="et"?"en":"et";save();render();break;
+    case"gear":view="settings";resetArm=false;render();scrollTo(0,0);break;
+    case"back":if(view==="settings")view="today";openRoom=null;render();scrollTo(0,0);break;
+    case"copy":{const code=btoa(unescape(encodeURIComponent(JSON.stringify(S))));
+      const ta=document.getElementById("imp");ta.value=code;
+      (navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(code):Promise.reject()).then(()=>toast(L().copied),()=>{ta.select();toast(L().copied)});break}
+    case"load":try{const o=JSON.parse(decodeURIComponent(escape(atob(document.getElementById("imp").value.trim()))));
+      if(!o||typeof o!=="object"||!o.done)throw 0;const fam=S.family;S=o;S.family=fam;load();pushAll();toast(L().loaded);render()}catch(_){toast(L().bad)}break;
+    case"famnew":{const a="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let c="";const r=crypto.getRandomValues(new Uint8Array(8));for(const x of r)c+=a[x%a.length];
+      startSync(c.slice(0,4)+"-"+c.slice(4),true);break}
+    case"famjoin":{const c=(document.getElementById("famcode").value||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+      if(c.length!==8){toast(L().badCode);break}startSync(c.slice(0,4)+"-"+c.slice(4),false);break}
+    case"famleave":stopSync();S.family=null;save();render();break;
+    case"reset":if(!resetArm){resetArm=true;render()}else{const lg=S.lang;stopSync();try{localStorage.removeItem(KEY)}catch(_){};load();S.lang=lg;save();resetArm=false;view="today";render()}break;
+  }
+});
+document.addEventListener("toggle",e=>{if(e.target.id==="more")catchOpen=e.target.open},true);
+document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches(".task[data-id]")){e.preventDefault();e.target.click()}});
+document.addEventListener("change",e=>{if(e.target.id==="af"){const v=e.target.value;document.getElementById("adw").style.display=v==="d"?"none":"flex";document.getElementById("awk").style.display=v==="m"?"block":"none"}});
+document.addEventListener("submit",e=>{
+  if(e.target.id!=="addf")return;e.preventDefault();
+  const name=document.getElementById("an").value.trim();if(!name)return;
+  const f=document.getElementById("af").value,d=document.getElementById("ad").value,w=document.getElementById("aw").value;
+  const min=Math.max(1,Math.min(240,parseInt(document.getElementById("am").value)||5));
+  const s=f==="d"?"d":f==="w"?"w"+d:f==="b"?"b0."+d:"m"+w+"."+d;
+  S.custom.push({id:"c-"+Date.now().toString(36),room:openRoom,s,min,en:name,et:name,help:null});
+  save();push({custom:S.custom});toast(L().added);render();
+});
+/* re-render when the day changes or the app comes back to the foreground */
+let lastDay=iso(new Date());
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&iso(new Date())!==lastDay){lastDay=iso(new Date());render()}});
+setInterval(()=>{if(iso(new Date())!==lastDay){lastDay=iso(new Date());render()}},60000);
+
+/* ---------- Family sync (Firebase Realtime Database) ---------- */
+const FB=window.KODUKORD_FIREBASE||null;let fbDb=null,famRef=null,conn="connecting",fbLoading=null;
+const toArr=v=>Array.isArray(v)?v.filter(x=>x!=null):v&&typeof v==="object"?Object.values(v):[];
+function loadScript(src){return new Promise((ok,no)=>{const e=document.createElement("script");e.src=src;e.onload=ok;e.onerror=no;document.head.appendChild(e)})}
+function fbInit(){
+  if(fbDb)return Promise.resolve(fbDb);
+  if(!fbLoading){const v="10.12.2",b="https://www.gstatic.com/firebasejs/"+v+"/";
+    fbLoading=loadScript(b+"firebase-app-compat.js").then(()=>loadScript(b+"firebase-database-compat.js")).then(()=>{
+      firebase.initializeApp(FB);fbDb=firebase.database();
+      fbDb.ref(".info/connected").on("value",s=>{conn=s.val()?"online":"offline";if(view==="settings")render()});
+      return fbDb});}
+  return fbLoading;
+}
+function shared(){return{start:S.start,done:S.done,hidden:S.hidden,custom:S.custom}}
+function push(upd){if(famRef)famRef.update(upd).catch(()=>{})}
+function pushAll(){if(famRef)famRef.set(shared()).catch(()=>{})}
+let pendingRender=false;
+function safeRender(){const a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)){pendingRender=true;return}render()}
+document.addEventListener("focusout",()=>{if(pendingRender){pendingRender=false;setTimeout(render,50)}});
+function startSync(code,isNew){
+  if(!FB)return;
+  fbInit().then(db=>{
+    stopSync();S.family=code;save();
+    famRef=db.ref("families/"+code.replace("-",""));
+    let first=true;
+    famRef.on("value",snap=>{
+      const v=snap.val();
+      if(!v){if(first)pushAll();first=false;return}
+      if(first&&!isNew){toast(L().joined)}
+      first=false;
+      S.start=v.start||S.start;S.done=v.done||{};S.hidden=toArr(v.hidden);
+      S.custom=toArr(v.custom).filter(c=>c&&c.id&&c.room&&c.s);
+      save();safeRender();
+    });
+    render();
+  }).catch(()=>{conn="offline";render()});
+}
+function stopSync(){if(famRef){famRef.off();famRef=null}}
+function syncCard(){
+  const l=L();
+  if(!FB)return`<div class="note" style="margin:0">${l.syncOff}</div>`;
+  if(!S.family)return`<div class="note" style="margin:0 0 10px">${l.syncIntro}</div>
+    <button class="btn" id="famnew" style="width:100%">${l.famNew}</button>
+    <div class="row" style="margin-top:12px"><input type="text" id="famcode" placeholder="${l.famCodePh}" autocapitalize="characters" autocomplete="off"><button class="btn sec" id="famjoin" style="flex:0 0 auto">${l.famJoin}</button></div>`;
+  const dot=conn==="online"?"🟢":conn==="offline"?"🟠":"⚪";
+  return`<label class="f" style="margin-top:0">${l.famCode}</label>
+    <div style="font-size:28px;font-weight:700;letter-spacing:3px;margin:2px 0 6px">${esc(S.family)}</div>
+    <div class="note" style="margin:0 0 8px">${l.famHint}</div>
+    <div style="font-size:14px;margin-bottom:12px">${dot} ${conn==="online"?l.online:conn==="offline"?l.offline:l.connecting}</div>
+    <button class="btn sec" id="famleave" style="width:100%">${l.famLeave}</button>`;
+}
+
+load();render();
+if(FB&&S.family)startSync(S.family,false);
+if("serviceWorker" in navigator&&location.protocol==="https:"&&!/claude|anthropic/.test(location.hostname)){
+  try{navigator.serviceWorker.register("sw.js").catch(()=>{})}catch(_){}
+}
+</script>
+</body>
+</html>

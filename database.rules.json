@@ -7,6 +7,12 @@
         ".read": "$code.length === 8",
         ".write": "$code.length === 8"
       }
+    },
+    "pesa": {
+      "$code": {
+        ".read": "$code.length === 8",
+        ".write": "$code.length === 8"
+      }
     }
   }
 }

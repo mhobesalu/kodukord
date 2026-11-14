@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pesa</title>
+<meta name="theme-color" content="#5a7d6a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Pesa">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{
+  --bg:#f5f2ec; --card:#fff; --ink:#26302c; --muted:#717a76; --line:#e7e2d8;
+  --sage:#5a7d6a; --sage-soft:#e3ece6; --sun:#e9a93b; --sun-soft:#fcf0d8;
+  --rose:#d9826b; --rose-soft:#f9e6df; --sky:#5b8fd6; --sky-soft:#e4edf9;
+  --plum:#9a72b5; --plum-soft:#efe6f5; --r:16px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.35}
+button{font:inherit;color:inherit;cursor:pointer}
+input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:760px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 12px) 16px calc(env(safe-area-inset-bottom) + 100px)}
+header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.logo{width:40px;height:40px;border-radius:12px;background:var(--sage);display:grid;place-items:center;font-size:22px;flex:none}
+.htxt{flex:1;min-width:0}
+.htxt h1{font-size:20px;margin:0}
+.htxt div{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iconbtn{border:1px solid var(--line);background:var(--card);border-radius:12px;height:40px;min-width:40px;padding:0 10px;font-weight:600;font-size:14px}
+.card{background:var(--card);border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.hero{background:linear-gradient(135deg,#5a7d6a,#73957f);color:#fff}
+.hero .clock{font-size:40px;font-weight:700;letter-spacing:1px;line-height:1}
+.hero .day{font-size:18px;margin-top:6px;opacity:.95}
+.hero .sub{opacity:.9;font-size:14px;margin-top:8px}
+h2{font-size:14px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin:22px 4px 8px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+h2 .add{font-size:14px;text-transform:none;letter-spacing:0;border:0;background:var(--sage-soft);color:#3d5c4b;border-radius:10px;padding:5px 10px;font-weight:600}
+.list{background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row .main{flex:1;min-width:0;cursor:pointer}
+.row .t{font-size:16px}
+.row .m{font-size:13px;color:var(--muted);margin-top:3px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.row .ic{font-size:24px;width:32px;text-align:center;flex:none}
+.chk{width:30px;height:30px;border-radius:9px;border:2px solid #c6ccc9;flex:none;display:grid;place-items:center;background:none;padding:0}
+.chk.on{background:var(--sage);border-color:var(--sage)}
+.chk.on:after{content:"";width:8px;height:14px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-2px)}
+.row.done .t{color:var(--muted);text-decoration:line-through}
+.act{border:0;border-radius:10px;padding:7px 12px;font-size:14px;font-weight:600;background:var(--sage-soft);color:#3d5c4b;flex:none}
+.pill{font-size:12px;padding:2px 8px;border-radius:10px;background:#f0ece4;color:#5d6461;white-space:nowrap}
+.pill.must{background:var(--rose-soft);color:#9b4a34}
+.pill.soon{background:var(--sun-soft);color:#8a6410}
+.pill.ok{background:var(--sage-soft);color:#3d5c4b}
+.who{display:inline-flex;align-items:center;gap:3px;font-size:12px;padding:2px 8px 2px 4px;border-radius:10px;white-space:nowrap}
+.empty{padding:18px;text-align:center;color:var(--muted);font-size:15px}
+.more{display:block;width:100%;border:0;background:none;color:var(--sage);font-weight:600;padding:12px;border-top:1px solid var(--line)}
+.banner{background:var(--sun-soft);border-radius:var(--r);padding:12px 14px;margin-bottom:14px;font-size:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.banner span{flex:1;min-width:200px}
+.btn{border:0;border-radius:12px;padding:12px 16px;font-weight:600;background:var(--sage);color:#fff}
+.btn.sec{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.btn.danger{background:var(--rose-soft);color:#9b4a34}
+.btn.small{padding:7px 12px;font-size:14px;border-radius:10px}
+.people{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.pcard{background:var(--card);border-radius:var(--r);padding:16px 12px;text-align:center;border:0;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.pcard .av{width:64px;height:64px;border-radius:50%;margin:0 auto 8px;display:grid;place-items:center;font-size:34px}
+.pcard b{display:block;font-size:17px}
+.pcard small{color:var(--muted);font-size:13px}
+.av{border-radius:50%;display:grid;place-items:center;flex:none}
+.tabs{display:flex;gap:8px;margin:4px 0 6px;flex-wrap:wrap}
+.tab{border:1px solid var(--line);background:var(--card);border-radius:20px;padding:8px 14px;font-size:15px}
+.tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.dream{background:var(--card);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 2px rgba(0,0,0,.04);cursor:pointer;border-left:5px solid var(--plum)}
+.dream b{font-size:17px;display:block}
+.dream .step{margin-top:8px;font-size:14px;background:var(--plum-soft);border-radius:10px;padding:8px 10px}
+.note{font-size:14px;color:var(--muted);margin:8px 4px}
+.link{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:var(--r);padding:14px 16px;text-decoration:none;color:inherit;box-shadow:0 1px 2px rgba(0,0,0,.04);margin-bottom:14px}
+.link .ic{font-size:28px}
+.link div{flex:1}
+.link small{display:block;color:var(--muted);font-size:13px}
+nav{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:5}
+nav .in{max-width:760px;margin:0 auto;display:flex}
+nav button{flex:1;border:0;background:none;padding:8px 2px 9px;font-size:11.5px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px}
+nav button span{font-size:22px;filter:grayscale(1);opacity:.6}
+nav button.on{color:var(--ink);font-weight:600}
+nav button.on span{filter:none;opacity:1}
+.sheet-bg{position:fixed;inset:0;background:rgba(30,35,33,.4);z-index:10;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--bg);width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:20px 20px 0 0;padding:18px 16px calc(env(safe-area-inset-bottom) + 18px)}
+@media(min-width:700px){.sheet-bg{align-items:center}.sheet{border-radius:20px}}
+.sheet h3{margin:0 0 12px;font-size:19px}
+label.f{display:block;font-size:13px;color:var(--muted);margin:12px 2px 5px;font-weight:600}
+.inp{width:100%;border:1px solid var(--line);background:#fff;border-radius:12px;padding:11px 12px;font-size:16px}
+textarea.inp{min-height:70px;resize:vertical}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:20px;padding:7px 12px;font-size:15px}
+.chip.on{background:var(--sage);color:#fff;border-color:var(--sage)}
+.btns{display:flex;gap:8px;margin-top:18px}
+.btns .btn{flex:1}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 84px);transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-size:15px;z-index:20;max-width:90vw;text-align:center}
+.sched{display:grid;gap:12px}
+.pcol{background:var(--card);border-radius:var(--r);padding:12px 14px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.pcol .hd{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:6px}
+.ev{display:flex;gap:10px;padding:6px 0;font-size:15px;border-top:1px solid var(--line);cursor:pointer}
+.ev:first-of-type{border-top:0}
+.ev .tm{color:var(--muted);min-width:46px;font-variant-numeric:tabular-nums}
+.ev.past{opacity:.45}
+.quiet{color:var(--muted);font-size:14px;padding:4px 0}
+/* wall screen / big displays */
+@media(min-width:1000px){
+  .wrap{max-width:1400px}
+  .today-grid{display:grid;grid-template-columns:minmax(380px,1fr) 2fr;gap:20px;align-items:start}
+  .sched{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .hero .clock{font-size:64px}
+  .wall .row .t{font-size:18px}
+}
+.wall nav{opacity:.9}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<nav><div class="in" id="nav"></div></nav>
+<script src="../config.js"></script>
+<script>
+/* ============ Pesa – family hub ============ */
+const KEY="pesa-v1";
+const T={
+en:{app:"Pesa",tag:"Our family hub",today:"Today",family:"Family",todo:"To-do",home:"Home",dates:"Dates",settings:"Settings",
+ nextUp:"Next up",pickOne:"Pick one thing. The rest can wait.",calm:"Nothing is pressing right now. Enjoy the day!",showMore:"Show more",showLess:"Show less",
+ schedule:"Today's plan",nothingToday:"Nothing planned",everyone:"Everyone",cleaning:"Cleaning today",openKodukord:"Open Kodukord",
+ must:"Must-do",musts:"Must-dos",todos:"To-dos",dreams:"Dreams",step:"Next tiny step",noStep:"Add a tiny first step",
+ care:"House care",lastDone:"Last done",nextTime:"Next",never:"Not set yet",every:"every",months:"months",month:"month",timeFor:"Time for this",soon:"Soon",
+ markDone:"Done",doneToday:"Done today",gotIt:"Got it",
+ birthday:"Birthday",turns:"turns",insurance:"Insurance",season:"Seasonal",other:"Other",upcoming:"Coming up",later:"Later",past:"Past",
+ add:"Add",save:"Save",del:"Delete",cancel:"Cancel",edit:"Edit",title:"Title",who:"Who",due:"Due date",note:"Note",repeat:"Repeats",
+ rNone:"No",rWeek:"Every week",rMonth:"Every month",rYear:"Every year",isMust:"This is a must-do",
+ everyMonths:"Repeat every (months)",where:"Belongs to",newGroup:"New tab (car, garden, tool…)",groupNote:"Notes (plate number, model, where papers are…)",emoji:"Icon (emoji)",date:"Date",yearly:"Every year",remind:"Remind me (days before)",kind:"Type",
+ days:"Repeat on days",oneDay:"Or one date",time:"Start",end:"End",name:"Name",color:"Colour",
+ person:"Person",addPerson:"Add person",newTask:"New to-do",newDream:"New dream",newCare:"New house job",newDate:"New date",newEvent:"New plan",
+ event:"Plan",schedFor:"Weekly plan",
+ sample:"These are examples so you can see how it works. Edit them, or clear them all at once.",clearSamples:"Clear examples",keepSamples:"Hide this",
+ samplesCleared:"Examples cleared",saved:"Saved",deleted:"Deleted",nextOn:"Next time:",
+ lang:"Language",wall:"Wall screen",wakeOn:"Keep screen on",wakeHint:"For a tablet on the wall. Works while the app is open.",
+ backup:"Backup",exportB:"Copy backup",importB:"Restore from backup",copied:"Backup copied",pastePrompt:"Paste the backup text here:",restored:"Restored",bad:"That did not look like a Pesa backup",
+ sync:"Family sync",syncOff:"Sync is not set up yet. Everything is saved on this device. When Firebase is set up for Kodukord, Pesa uses the same one.",
+ syncIntro:"Share one hub between phones, the laptop and the wall screen.",famNew:"Start a family hub",famJoin:"Join",famCodePh:"Family code",famCode:"Family code",famHint:"Type this code on other devices to join.",famLeave:"Stop syncing on this device",online:"Connected",offline:"Offline, will sync later",connecting:"Connecting…",joined:"Joined the family hub",
+ calSoon:"Google Calendar: coming next. Your plans here stay as they are.",
+ today_:"today",tomorrow:"tomorrow",yesterday:"yesterday",inD:"in {n} days",agoD:"{n} days ago",inW:"in {n} weeks",inM:"in {n} months",agoM:"{n} months ago",
+ resetAll:"Delete everything on this device",sure:"Delete all Pesa data on this device?",
+ hello:["Good night","Good morning","Good afternoon","Good evening"]},
+et:{app:"Pesa",tag:"Meie pere keskus",today:"Täna",family:"Pere",todo:"Tegemised",home:"Kodu",dates:"Tähtpäevad",settings:"Seaded",
+ nextUp:"Järgmisena",pickOne:"Vali üks asi. Ülejäänu võib oodata.",calm:"Praegu pole midagi kiiret. Naudi päeva!",showMore:"Näita veel",showLess:"Näita vähem",
+ schedule:"Tänane plaan",nothingToday:"Midagi pole plaanis",everyone:"Kõik",cleaning:"Tänane koristus",openKodukord:"Ava Kodukord",
+ must:"Kindlasti teha",musts:"Kindlasti teha",todos:"Tegemised",dreams:"Unistused",step:"Järgmine väike samm",noStep:"Lisa üks väike esimene samm",
+ care:"Kodu hooldus",lastDone:"Viimati tehtud",nextTime:"Järgmine kord",never:"Pole veel märgitud",every:"iga",months:"kuu tagant",month:"kuu tagant",timeFor:"Aeg see ära teha",soon:"Varsti",
+ markDone:"Tehtud",doneToday:"Tehtud täna",gotIt:"Selge",
+ birthday:"Sünnipäev",turns:"saab",insurance:"Kindlustus",season:"Aastaring",other:"Muu",upcoming:"Tulekul",later:"Hiljem",past:"Möödunud",
+ add:"Lisa",save:"Salvesta",del:"Kustuta",cancel:"Tühista",edit:"Muuda",title:"Pealkiri",who:"Kes",due:"Tähtaeg",note:"Märkus",repeat:"Kordub",
+ rNone:"Ei",rWeek:"Iga nädal",rMonth:"Iga kuu",rYear:"Iga aasta",isMust:"See tuleb kindlasti teha",
+ everyMonths:"Kordub iga (kuud)",where:"Kuhu kuulub",newGroup:"Uus vahekaart (auto, aed, tööriist…)",groupNote:"Märkmed (numbrimärk, mudel, kus paberid on…)",emoji:"Ikoon (emoji)",date:"Kuupäev",yearly:"Iga aasta",remind:"Tuleta meelde (päeva enne)",kind:"Liik",
+ days:"Kordub päevadel",oneDay:"Või üks kuupäev",time:"Algus",end:"Lõpp",name:"Nimi",color:"Värv",
+ person:"Pereliige",addPerson:"Lisa pereliige",newTask:"Uus tegemine",newDream:"Uus unistus",newCare:"Uus kodutöö",newDate:"Uus tähtpäev",newEvent:"Uus plaan",
+ event:"Plaan",schedFor:"Nädala plaan",
+ sample:"Need on näited, et näeksid, kuidas see töötab. Muuda neid või kustuta kõik korraga.",clearSamples:"Kustuta näited",keepSamples:"Peida see",
+ samplesCleared:"Näited kustutatud",saved:"Salvestatud",deleted:"Kustutatud",nextOn:"Järgmine kord:",
+ lang:"Keel",wall:"Seinaekraan",wakeOn:"Hoia ekraan sees",wakeHint:"Seinal olevale tahvlile. Töötab, kui äpp on lahti.",
+ backup:"Varukoopia",exportB:"Kopeeri varukoopia",importB:"Taasta varukoopiast",copied:"Varukoopia kopeeritud",pastePrompt:"Kleebi varukoopia tekst siia:",restored:"Taastatud",bad:"See ei paista olevat Pesa varukoopia",
+ sync:"Pere sünkroon",syncOff:"Sünkroon pole veel seadistatud. Kõik on salvestatud selles seadmes. Kui Kodukorrale on Firebase seadistatud, kasutab Pesa sama.",
+ syncIntro:"Üks ühine keskus telefonides, sülearvutis ja seinaekraanil.",famNew:"Alusta pere keskust",famJoin:"Liitu",famCodePh:"Pere kood",famCode:"Pere kood",famHint:"Sisesta see kood teistes seadmetes, et liituda.",famLeave:"Lõpeta sünkroon selles seadmes",online:"Ühendatud",offline:"Võrguta, sünkroonib hiljem",connecting:"Ühendan…",joined:"Liitusid pere keskusega",
+ calSoon:"Google'i kalender: tuleb järgmisena. Siinsed plaanid jäävad alles.",
+ today_:"täna",tomorrow:"homme",yesterday:"eile",inD:"{n} päeva pärast",agoD:"{n} päeva tagasi",inW:"{n} nädala pärast",inM:"{n} kuu pärast",agoM:"{n} kuud tagasi",
+ resetAll:"Kustuta kõik selles seadmes",sure:"Kas kustutada kõik Pesa andmed selles seadmes?",
+ hello:["Head ööd","Tere hommikust","Tere päevast","Head õhtut"]}
+};
+const COLORS=["#5a7d6a","#d9826b","#5b8fd6","#e9a93b","#9a72b5","#4aa3a2","#c46a8f","#7b8a3a"];
+const soft=c=>c+"26";
+const WD={en:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],et:["P","E","T","K","N","R","L"]};
+const WEEK=[1,2,3,4,5,6,0];
+/* Kodukord's weekly focus (same as the cleaning app) */
+const KK={en:["Rest and plan","Kitchen","Bathroom + WC","Living room + hallway","Bedrooms","Wardrobe + laundry","Bedding + family reset"],
+ et:["Puhkus ja plaan","Köök","Vannituba + WC","Elutuba + esik","Magamistoad","Riietusruum + pesu","Voodipesu + pere koristus"]};
+
+/* ---------- dates ---------- */
+const pad=n=>String(n).padStart(2,"0");
+const iso=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const parse=s=>{const[a,b,c]=s.split("-").map(Number);return new Date(a,b-1,c)};
+const todayISO=()=>iso(new Date());
+const addDays=(s,n)=>{const d=parse(s);d.setDate(d.getDate()+n);return iso(d)};
+const addMonths=(s,n)=>{const d=parse(s);const day=d.getDate();d.setDate(1);d.setMonth(d.getMonth()+Math.round(n));const last=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();d.setDate(Math.min(day,last));return iso(d)};
+const diff=(a,b)=>Math.round((parse(b)-parse(a))/864e5); // days from a to b
+const loc=()=>S.lang==="et"?"et-EE":"en-GB";
+function fmt(s,withYear){const d=parse(s);const o={day:"numeric",month:"short"};if(withYear||d.getFullYear()!==new Date().getFullYear())o.year="numeric";return d.toLocaleDateString(loc(),o)}
+function rel(s){const n=diff(todayISO(),s),l=L();
+  if(n===0)return l.today_;if(n===1)return l.tomorrow;if(n===-1)return l.yesterday;
+  if(n>1&&n<14)return l.inD.replace("{n}",n);if(n<-1&&n>-60)return l.agoD.replace("{n}",-n);
+  if(n>=14&&n<60)return l.inW.replace("{n}",Math.round(n/7));
+  if(n>=60)return l.inM.replace("{n}",Math.round(n/30.4));
+  return l.agoM.replace("{n}",Math.round(-n/30.4));}
+
+/* ---------- state ---------- */
+let S;
+const L=()=>T[S.lang];
+const tt=x=>x&&typeof x==="object"?(x[S.lang]||x.en||""):(x||"");
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const LISTS=["people","groups","tasks","dreams","care","dates","events"];
+const HOUSE={id:"house",name:{en:"House",et:"Maja"},emoji:"🏠",note:""};
+
+function sample(){
+  const t=todayISO(),y=new Date().getFullYear(),S_=true;
+  const lastOn=md=>(t>=y+"-"+md?y:y-1)+"-"+md;
+  const P=[
+    {id:"maria",name:"Maria",emoji:"🌻",color:COLORS[0],birthday:""},
+    {id:"partner",name:{en:"Partner",et:"Kaasa"},emoji:"🧔",color:COLORS[2],birthday:""},
+    {id:"ben",name:"Ben",emoji:"⭐",color:COLORS[3],birthday:""},
+    {id:"frank",name:"Frank",emoji:"💦",color:COLORS[4],birthday:"2022-06-22"}];
+  const b=x=>Object.assign({id:uid(),sample:S_},x);
+  return {lang:(navigator.language||"").startsWith("et")?"et":"en",family:null,showBanner:true,wake:false,acks:{},
+   people:P,
+   groups:[HOUSE,
+    {id:"rav4",name:"Toyota RAV4 (2020)",emoji:"🚙",note:""},
+    {id:"mazda",name:"Mazda 323F (1993)",emoji:"🚗",note:""}],
+   events:[
+    b({title:{en:"Kindergarten",et:"Lasteaed"},who:["frank"],days:[1,2,3,4,5],time:"08:30",end:"16:30"}),
+    b({title:{en:"School",et:"Kool"},who:["ben"],days:[1,2,3,4,5],time:"08:00",end:"14:30"}),
+    b({title:{en:"Work",et:"Töö"},who:["maria"],days:[1,2,3,4,5],time:"09:00",end:"17:00"}),
+    b({title:{en:"Swimming",et:"Ujumine"},who:["frank","partner"],days:[3],time:"17:30",end:"18:15"}),
+    b({title:{en:"Family dinner",et:"Pere õhtusöök"},who:[],days:[0],time:"18:00",end:""})],
+   tasks:[
+    b({title:{en:"Book Frank's doctor check-up",et:"Pane Frankile arsti aeg"},who:["maria"],due:addDays(t,3),must:true,repeat:""}),
+    b({title:{en:"Pay the electricity bill",et:"Maksa elektriarve"},who:[],due:addDays(t,6),must:true,repeat:"month"}),
+    b({title:{en:"Ben: pack school bag the night before",et:"Ben: paki koolikott õhtul valmis"},who:["ben"],due:"",must:false,repeat:"week"}),
+    b({title:{en:"Fix the wobbly kitchen chair",et:"Paranda logisev köögitool"},who:["partner"],due:"",must:false,repeat:""})],
+   dreams:[
+    b({title:{en:"Family trip to the islands",et:"Pere reis saartele"},who:[],step:{en:"Look at ferry times to Saaremaa",et:"Vaata Saaremaa praamiaegu"},note:""}),
+    b({title:{en:"Learn to play guitar",et:"Õpi kitarri mängima"},who:["ben"],step:{en:"Watch one beginner video",et:"Vaata üht algajate videot"},note:""}),
+    b({title:{en:"A vegetable patch",et:"Oma köögiviljapeenar"},who:["maria","frank"],step:{en:"Pick a sunny spot in the garden",et:"Vali aias päikeseline koht"},note:""})],
+   care:[
+    b({title:{en:"Gas boiler service",et:"Gaasikatla hooldus"},emoji:"🔥",every:12,last:addMonths(t,-11),who:[],note:{en:"Call the service company 2–3 weeks ahead.",et:"Helista hooldusfirmale 2–3 nädalat ette."}}),
+    b({title:{en:"Chimney + wood stove sweep",et:"Korstnapühkija (korsten + ahi)"},emoji:"🧹",every:12,last:addMonths(t,-13),who:[],note:{en:"Required once a year in Estonia for wood heating. Keep the certificate.",et:"Puuküttega kord aastas kohustuslik. Hoia akt alles."}}),
+    b({title:{en:"Smoke + CO alarm test",et:"Suitsu- ja vinguanduri test"},emoji:"🚨",every:3,last:addMonths(t,-2),who:[],note:""}),
+    b({title:{en:"Ventilation filters",et:"Ventilatsiooni filtrid"},emoji:"🌬️",every:6,last:addMonths(t,-4),who:[],note:""}),
+    b({title:{en:"Clean gutters",et:"Puhasta vihmaveerennid"},emoji:"🍂",every:12,last:"",who:["partner"],note:""}),
+    ...["rav4","mazda"].flatMap(g=>[
+     {id:g+"-winter",group:g,title:{en:"Winter tyres on",et:"Talverehvid alla"},emoji:"❄️",every:12,last:lastOn("11-01"),who:[],note:{en:"Around 1 November every year.",et:"Igal aastal umbes 1. novembril."}},
+     {id:g+"-summer",group:g,title:{en:"Summer tyres on",et:"Suverehvid alla"},emoji:"🌞",every:12,last:lastOn("04-01"),who:[],note:{en:"Around 1 April every year.",et:"Igal aastal umbes 1. aprillil."}},
+     ({id:uid(),group:g,title:{en:"Service",et:"Hooldus"},emoji:"🔧",every:12,last:"",who:[],note:""}),
+     ({id:uid(),group:g,title:{en:"Technical inspection",et:"Tehnoülevaatus"},emoji:"📋",every:g==="mazda"?12:24,last:"",who:[],note:{en:"Check the due date in the Transport Administration e-service, then set the last date here.",et:"Vaata tähtaeg Transpordiameti e-teenindusest ja märgi siia viimane kord."}})])],
+   dates:[
+    b({title:{en:"Start buying Christmas presents",et:"Alusta jõulukinkide ostmist"},kind:"season",date:y+"-12-01",yearly:true,remind:14,who:[],note:""}),
+    b({title:{en:"Advent calendar ready",et:"Advendikalender valmis"},kind:"season",date:y+"-11-29",yearly:true,remind:7,who:["maria"],note:""}),
+    b({title:{en:"Home insurance renewal",et:"Kodukindlustuse uuendamine"},kind:"insurance",date:addDays(t,40),yearly:true,remind:30,who:[],note:{en:"Compare 2–3 offers first.",et:"Võrdle enne 2–3 pakkumist."}}),
+    b({title:{en:"Car insurance (MTPL)",et:"Liikluskindlustus"},kind:"insurance",date:addDays(t,95),yearly:true,remind:21,who:[],note:""}),
+    b({title:{en:"Insurance advisor meeting",et:"Kohtumine kindlustusnõustajaga"},kind:"insurance",date:addDays(t,9),yearly:false,remind:7,who:["maria","partner"],note:""}),
+    b({title:{en:"School year starts",et:"Kooliaasta algab"},kind:"season",date:y+"-09-01",yearly:true,remind:21,who:["ben"],note:""})]
+  };
+}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.people){LISTS.forEach(k=>s[k]=s[k]||[]);if(!s.groups.length)s.groups=[HOUSE];s.acks=s.acks||{};return s}}catch(_){}return null}
+function save(){localStorage.setItem(KEY,JSON.stringify(S))}
+S=load()||sample();save();
+document.documentElement.lang=S.lang;
+
+const person=id=>S.people.find(p=>p.id===id);
+const pname=p=>tt(p.name);
+function whoChips(ids){
+  if(!ids||!ids.length)return`<span class="who" style="background:#f0ece4">👪 ${L().everyone}</span>`;
+  return ids.map(person).filter(Boolean).map(p=>`<span class="who" style="background:${soft(p.color)}">${esc(p.emoji)} ${esc(pname(p))}</span>`).join("");
+}
+
+/* ---------- derived ---------- */
+function careNext(c){return c.last?addMonths(c.last,c.every||12):null}
+function dateNext(d){ // next occurrence ISO
+  if(!d.date)return null;
+  if(!d.yearly)return d.date;
+  const t=todayISO(),md=d.date.slice(5);let y=new Date().getFullYear();
+  let s=y+"-"+md;if(s<t)s=(y+1)+"-"+md;return s;
+}
+function birthdays(){return S.people.filter(p=>p.birthday).map(p=>{
+  const d={id:"bd-"+p.id,bd:true,pid:p.id,title:"🎂 "+pname(p),kind:"birthday",date:p.birthday,yearly:true,remind:21,who:[p.id]};
+  const n=dateNext(d);d.age=Number(n.slice(0,4))-Number(p.birthday.slice(0,4));return d})}
+function allDates(){return S.dates.concat(birthdays())}
+
+function nextUp(){
+  const t=todayISO(),out=[];
+  S.tasks.forEach(k=>{if(k.done)return;
+    if(k.due&&diff(t,k.due)<=(k.must?7:2))out.push({kind:"task",it:k,when:k.due,score:k.due});
+    else if(k.must&&!k.due)out.push({kind:"task",it:k,when:null,score:addDays(t,5)});});
+  S.care.forEach(c=>{const n=careNext(c);if(n&&diff(t,n)<=21)out.push({kind:"care",it:c,when:n,score:n})});
+  allDates().forEach(d=>{const n=dateNext(d);if(!n||n<t)return;
+    if(diff(t,n)<=(d.remind||14)&&S.acks[d.id]!==n)out.push({kind:"date",it:d,when:n,score:n})});
+  return out.sort((a,b)=>a.score<b.score?-1:a.score>b.score?1:0);
+}
+function eventsOn(day,pid){ // day ISO
+  const wd=parse(day).getDay();
+  return S.events.filter(e=>(e.days&&e.days.length?e.days.includes(wd):e.date===day)&&(pid===undefined||!e.who.length||e.who.includes(pid)))
+    .sort((a,b)=>(a.time||"99").localeCompare(b.time||"99"));
+}
+
+/* ---------- rows ---------- */
+function taskRow(k){
+  const t=todayISO();let pills="";
+  if(k.must)pills+=`<span class="pill must">${L().must}</span>`;
+  if(k.due){const n=diff(t,k.due);pills+=`<span class="pill ${n<=1?"soon":""}">${esc(rel(k.due))}</span>`}
+  if(k.repeat)pills+=`<span class="pill">🔁</span>`;
+  return`<div class="row ${k.done?"done":""}"><button class="chk ${k.done?"on":""}" data-act="toggle" data-id="${k.id}" aria-label="${L().markDone}"></button>
+   <div class="main" data-act="edit" data-type="task" data-id="${k.id}"><div class="t">${esc(tt(k.title))}</div><div class="m">${pills}${whoChips(k.who)}</div></div></div>`;
+}
+function careRow(c,inNext){
+  const l=L(),t=todayISO(),n=careNext(c);let st;
+  if(!n)st=`<span class="pill">${l.lastDone}: ${l.never}</span>`;
+  else{const d=diff(t,n);
+    st=d<=0?`<span class="pill soon">${l.timeFor}</span>`:d<=30?`<span class="pill soon">${l.soon}: ${esc(rel(n))}</span>`:`<span class="pill ok">${l.nextTime}: ${esc(fmt(n))}</span>`;
+    if(!inNext)st+=`<span>${l.lastDone} ${esc(fmt(c.last,true))}</span>`;}
+  return`<div class="row"><div class="ic">${esc(c.emoji||"🏠")}</div>
+   <div class="main" data-act="edit" data-type="care" data-id="${c.id}"><div class="t">${esc(tt(c.title))}</div><div class="m">${st}</div></div>
+   <button class="act" data-act="careDone" data-id="${c.id}">${l.markDone}</button></div>`;
+}
+const KICON={birthday:"🎂",insurance:"📄",season:"🍂",other:"📌"};
+function dateRow(d,inNext){
+  const l=L(),n=dateNext(d),t=todayISO();
+  let ic=KICON[d.kind]||"📌";if(d.kind==="season"){const m=Number((n||d.date).slice(5,7));ic=m===12||m===1?"🎄":m<=5?"🌷":m<=8?"☀️":"🍂"}
+  let sub=n?`<span class="pill ${n>=t&&diff(t,n)<=(d.remind||14)?"soon":""}">${esc(fmt(n))} · ${esc(rel(n))}</span>`:"";
+  if(d.bd)sub+=`<span>${l.turns} ${d.age}</span>`;
+  const title=d.bd?esc(d.title.replace("🎂 ",""))+" · "+l.birthday:esc(tt(d.title));
+  const btn=inNext?`<button class="act" data-act="ack" data-id="${d.id}" data-n="${n}">${l.gotIt}</button>`:"";
+  const ed=d.bd?`data-act="edit" data-type="person" data-id="${d.pid}"`:`data-act="edit" data-type="date" data-id="${d.id}"`;
+  return`<div class="row ${n&&n<t?"done":""}"><div class="ic">${ic}</div><div class="main" ${ed}><div class="t">${title}</div><div class="m">${sub}${d.bd?"":whoChips(d.who)}</div></div>${btn}</div>`;
+}
+
+/* ---------- views ---------- */
+let view="today",more=false,listTab="todo",dateTab="up",openPerson=null,clockTimer=null;
+function hello(){const h=new Date().getHours();return L().hello[h<5?0:h<12?1:h<18?2:3]}
+function banner(){
+  const has=LISTS.some(k=>S[k].some(x=>x.sample));
+  if(!S.showBanner||!has)return"";
+  return`<div class="banner"><span>💡 ${L().sample}</span><button class="btn small" data-act="clearSamples">${L().clearSamples}</button><button class="btn small sec" data-act="hideBanner">${L().keepSamples}</button></div>`;
+}
+function vToday(){
+  const l=L(),t=todayISO(),now=new Date();
+  const nu=nextUp(),shown=more?nu:nu.slice(0,3);
+  const rows=shown.map(x=>x.kind==="task"?taskRow(x.it):x.kind==="care"?careRow(x.it,true):dateRow(x.it,true)).join("");
+  const next=`<h2>${l.nextUp}</h2><div class="list">${nu.length?rows:`<div class="empty">🌿 ${l.calm}</div>`}
+    ${nu.length>3?`<button class="more" data-act="more">${more?l.showLess:l.showMore}</button>`:""}</div>
+    ${nu.length?`<div class="note">${l.pickOne}</div>`:""}`;
+  const hm=pad(now.getHours())+":"+pad(now.getMinutes());
+  const cols=S.people.map(p=>{
+    const ev=eventsOn(t,p.id);
+    return`<div class="pcol"><div class="hd"><span class="av" style="width:30px;height:30px;background:${soft(p.color)}">${esc(p.emoji)}</span>${esc(pname(p))}</div>
+      ${ev.length?ev.map(e=>`<div class="ev ${e.end&&e.end<hm?"past":""}" data-act="edit" data-type="event" data-id="${e.id}"><span class="tm">${esc(e.time||"")}</span><span>${esc(tt(e.title))}${e.end?` <span style="color:var(--muted)">– ${esc(e.end)}</span>`:""}</span></div>`).join("")
+      :`<div class="quiet">${l.nothingToday}</div>`}</div>`}).join("");
+  const wd=now.getDay();
+  return`${banner()}<div class="today-grid"><div>
+    <div class="card hero"><div class="clock" id="clock">${hm}</div>
+      <div class="day">${esc(now.toLocaleDateString(loc(),{weekday:"long",day:"numeric",month:"long"}))}</div>
+      <div class="sub">${hello()} 🌿</div></div>
+    ${next}
+    <h2>${l.cleaning}</h2>
+    <a class="link" href="../"><span class="ic">🧹</span><div><b>${esc(KK[S.lang][wd])}</b><small>${l.openKodukord} →</small></div></a>
+   </div><div>
+    <h2>${l.schedule}<button class="add" data-act="new" data-type="event">+ ${l.add}</button></h2>
+    <div class="sched">${cols}</div></div></div>`;
+}
+function vFamily(){
+  const l=L();
+  if(openPerson&&person(openPerson))return vPerson(person(openPerson));
+  return`${banner()}<h2>${l.family}<button class="add" data-act="new" data-type="person">+ ${l.addPerson}</button></h2>
+   <div class="people">${S.people.map(p=>`<button class="pcard" data-act="openPerson" data-id="${p.id}">
+     <div class="av" style="background:${soft(p.color)}">${esc(p.emoji)}</div><b>${esc(pname(p))}</b>
+     <small>${p.birthday?"🎂 "+esc(fmt(p.birthday.slice(5)==="02-29"?p.birthday:new Date().getFullYear()+p.birthday.slice(4))):"&nbsp;"}</small></button>`).join("")}</div>`;
+}
+function vPerson(p){
+  const l=L(),mine=a=>a.filter(x=>x.who&&x.who.includes(p.id));
+  const tasks=mine(S.tasks).filter(k=>!k.done||k.done===todayISO());
+  const dreams=mine(S.dreams);
+  const ev=S.events.filter(e=>e.who.includes(p.id));
+  const evRows=ev.map(e=>`<div class="row"><div class="main" data-act="edit" data-type="event" data-id="${e.id}"><div class="t">${esc(tt(e.title))}</div>
+     <div class="m"><span class="pill">${e.days&&e.days.length?WEEK.filter(d=>e.days.includes(d)).map(d=>WD[S.lang][d]).join(" "):esc(fmt(e.date||todayISO()))}</span>${e.time?`<span>${esc(e.time)}${e.end?"–"+esc(e.end):""}</span>`:""}</div></div></div>`).join("");
+  return`<button class="iconbtn" data-act="closePerson" style="margin-bottom:12px">← ${l.family}</button>
+   <div class="card" style="display:flex;align-items:center;gap:14px">
+     <div class="av" style="width:64px;height:64px;font-size:34px;background:${soft(p.color)}">${esc(p.emoji)}</div>
+     <div style="flex:1"><b style="font-size:22px">${esc(pname(p))}</b>${p.birthday?`<div class="note" style="margin:2px 0 0">🎂 ${esc(fmt(p.birthday,true))}</div>`:""}</div>
+     <button class="iconbtn" data-act="edit" data-type="person" data-id="${p.id}">✏️</button></div>
+   <h2>${l.schedFor}<button class="add" data-act="new" data-type="event" data-who="${p.id}">+ ${l.add}</button></h2>
+   <div class="list">${evRows||`<div class="empty">${l.nothingToday}</div>`}</div>
+   <h2>${l.todos}<button class="add" data-act="new" data-type="task" data-who="${p.id}">+ ${l.add}</button></h2>
+   <div class="list">${tasks.length?sortTasks(tasks).map(taskRow).join(""):`<div class="empty">🌿</div>`}</div>
+   <h2>${l.dreams}<button class="add" data-act="new" data-type="dream" data-who="${p.id}">+ ${l.add}</button></h2>
+   ${dreams.map(dreamCard).join("")||`<div class="note">✨</div>`}`;
+}
+function sortTasks(a){return a.slice().sort((x,y)=>(!!x.done-!!y.done)||(!!y.must-!!x.must)||((x.due||"9")<(y.due||"9")?-1:(x.due||"9")>(y.due||"9")?1:0))}
+function dreamCard(d){return`<div class="dream" data-act="edit" data-type="dream" data-id="${d.id}"><b>${esc(tt(d.title))}</b>
+  <div class="m" style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap">${whoChips(d.who)}</div>
+  <div class="step">👣 ${tt(d.step)?esc(tt(d.step)):`<span style="color:var(--muted)">${L().noStep}</span>`}</div></div>`}
+function vTodo(){
+  const l=L(),t=todayISO();
+  const tabs=`<div class="tabs"><button class="tab ${listTab==="todo"?"on":""}" data-act="listTab" data-v="todo">✅ ${l.todos}</button><button class="tab ${listTab==="dreams"?"on":""}" data-act="listTab" data-v="dreams">✨ ${l.dreams}</button></div>`;
+  if(listTab==="dreams")return`${banner()}${tabs}<h2>${l.dreams}<button class="add" data-act="new" data-type="dream">+ ${l.add}</button></h2>${S.dreams.map(dreamCard).join("")||`<div class="note">✨</div>`}`;
+  const open=S.tasks.filter(k=>!k.done||k.done===t);
+  const musts=sortTasks(open.filter(k=>k.must)),rest=sortTasks(open.filter(k=>!k.must));
+  return`${banner()}${tabs}
+   <h2>${l.musts}<button class="add" data-act="new" data-type="task" data-must="1">+ ${l.add}</button></h2>
+   <div class="list">${musts.map(taskRow).join("")||`<div class="empty">🌿</div>`}</div>
+   <h2>${l.todos}<button class="add" data-act="new" data-type="task">+ ${l.add}</button></h2>
+   <div class="list">${rest.map(taskRow).join("")||`<div class="empty">🌿</div>`}</div>`;
+}
+let homeTab="house";
+function vHome(){
+  const l=L(),t=todayISO();
+  if(!S.groups.find(g=>g.id===homeTab))homeTab="house";
+  const g=S.groups.find(x=>x.id===homeTab)||HOUSE;
+  const tabs=`<div class="tabs">${S.groups.map(x=>`<button class="tab ${x.id===homeTab?"on":""}" data-act="homeTab" data-v="${x.id}">${esc(x.emoji)} ${esc(tt(x.name))}</button>`).join("")}<button class="tab" data-act="new" data-type="group">+</button></div>`;
+  const arr=S.care.filter(c=>(c.group||"house")===homeTab).slice().sort((a,b)=>{const x=careNext(a)||"0",y=careNext(b)||"0";return x<y?-1:x>y?1:0});
+  return`${banner()}<a class="link" href="../"><span class="ic">🧹</span><div><b>Kodukord</b><small>${l.cleaning}: ${esc(KK[S.lang][new Date().getDay()])} →</small></div></a>
+   ${tabs}
+   <h2><span>${esc(tt(g.name))} <button class="add" data-act="edit" data-type="group" data-id="${g.id}" aria-label="${l.edit}">✏️</button></span><button class="add" data-act="new" data-type="care" data-group="${g.id}">+ ${l.add}</button></h2>
+   ${g.note?`<div class="note">${esc(g.note).replace(/\n/g,"<br>")}</div>`:""}
+   <div class="list">${arr.map(c=>careRow(c,false)).join("")||`<div class="empty">🏠</div>`}</div>`;
+}
+function vDates(){
+  const l=L(),t=todayISO();
+  const all=allDates().map(d=>({d,n:dateNext(d)})).filter(x=>x.n);
+  const up=all.filter(x=>x.n>=t&&diff(t,x.n)<=60).sort((a,b)=>a.n<b.n?-1:1);
+  const later=all.filter(x=>x.n>=t&&diff(t,x.n)>60).sort((a,b)=>a.n<b.n?-1:1);
+  const past=all.filter(x=>x.n<t).sort((a,b)=>a.n>b.n?-1:1);
+  const blk=(h,a)=>a.length?`<h2>${h}</h2><div class="list">${a.map(x=>dateRow(x.d,false)).join("")}</div>`:"";
+  return`${banner()}<h2>${l.dates}<button class="add" data-act="new" data-type="date">+ ${l.add}</button></h2>
+   ${blk(l.upcoming,up)}${blk(l.later,later)}${blk(l.past,past)}${all.length?"":`<div class="empty">📅</div>`}`;
+}
+function vSettings(){
+  const l=L();
+  return`<div class="card"><label class="f" style="margin-top:0">${l.lang}</label>
+    <div class="chips"><button class="chip ${S.lang==="et"?"on":""}" data-act="lang" data-v="et">Eesti</button><button class="chip ${S.lang==="en"?"on":""}" data-act="lang" data-v="en">English</button></div>
+    <label class="f">${l.wall}</label>
+    <div class="chips"><button class="chip ${S.wake?"on":""}" data-act="wake">💡 ${l.wakeOn}</button></div>
+    <div class="note" style="margin:6px 2px 0">${l.wakeHint}</div></div>
+   <div class="card"><label class="f" style="margin-top:0">📅 Google Calendar</label><div class="note" style="margin:0">${l.calSoon}</div></div>
+   <div class="card"><label class="f" style="margin-top:0">${l.sync}</label>${syncCard()}</div>
+   <div class="card"><label class="f" style="margin-top:0">${l.backup}</label>
+    <div class="chips"><button class="btn small sec" data-act="export">${l.exportB}</button><button class="btn small sec" data-act="import">${l.importB}</button></div>
+    <div style="margin-top:14px"><button class="btn small danger" data-act="reset">${l.resetAll}</button></div></div>`;
+}
+
+function render(){
+  const l=L();document.documentElement.lang=S.lang;
+  document.body.classList.toggle("wall",!!S.wake);
+  const sub=view==="today"?l.tag:l[view==="todo"?"todo":view];
+  const body={today:vToday,family:vFamily,todo:vTodo,home:vHome,dates:vDates,settings:vSettings}[view]();
+  document.getElementById("app").innerHTML=`<header><div class="logo">🪺</div><div class="htxt"><h1>${l.app}</h1><div>${esc(sub)}</div></div>
+    <button class="iconbtn" data-act="lang" data-v="${S.lang==="et"?"en":"et"}">${S.lang==="et"?"EN":"ET"}</button>
+    <button class="iconbtn" data-act="go" data-v="settings" aria-label="${l.settings}">⚙️</button></header>${body}`;
+  const tabs=[["today","☀️",l.today],["family","👪",l.family],["todo","✅",l.todo],["home","🏠",l.home],["dates","📅",l.dates]];
+  document.getElementById("nav").innerHTML=tabs.map(([k,e,n])=>`<button class="${view===k?"on":""}" data-act="go" data-v="${k}"><span>${e}</span>${n}</button>`).join("");
+}
+function toast(msg){const d=document.createElement("div");d.className="toast";d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2200)}
+
+/* ---------- editor ---------- */
+const SCHEMA={
+ task:[["title","text"],["who","who"],["due","date"],["must","check","isMust"],["repeat","repeat"],["note","area"]],
+ dream:[["title","text"],["who","who"],["step","text"],["note","area"]],
+ care:[["title","text"],["group","group","where"],["emoji","text"],["every","num","everyMonths"],["last","date","lastDone"],["who","who"],["note","area"]],
+ date:[["title","text"],["kind","kind"],["date","date"],["yearly","check"],["remind","num"],["who","who"],["note","area"]],
+ event:[["title","text"],["who","who"],["days","days"],["date","date","oneDay"],["time","time"],["end","time"],["note","area"]],
+ person:[["name","text"],["emoji","text"],["color","color"],["birthday","date"]],
+ group:[["name","text"],["emoji","text"],["note","area","groupNote"]]
+};
+const STORE={task:"tasks",dream:"dreams",care:"care",date:"dates",event:"events",person:"people",group:"groups"};
+const NEWT={task:"newTask",dream:"newDream",care:"newCare",date:"newDate",event:"newEvent",person:"addPerson",group:"newGroup"};
+let ed=null;
+function openEditor(type,id,preset){
+  const arr=S[STORE[type]];let it=id?arr.find(x=>x.id===id):null;
+  const base={task:{title:"",who:[],due:"",must:false,repeat:""},dream:{title:"",who:[],step:"",note:""},
+    group:{name:"",emoji:"🧰",note:""},care:{title:"",group:"house",emoji:"🏠",every:12,last:"",who:[],note:""},date:{title:"",kind:"other",date:"",yearly:true,remind:14,who:[],note:""},
+    event:{title:"",who:[],days:[],date:"",time:"",end:"",note:""},person:{name:"",emoji:"🙂",color:COLORS[S.people.length%COLORS.length],birthday:""}}[type];
+  const v=Object.assign({},base,it||{},preset||{});
+  ["title","name","step","note"].forEach(k=>{if(v[k]&&typeof v[k]==="object")v[k]=tt(v[k])});
+  v.who=(v.who||[]).slice();v.days=(v.days||[]).slice();
+  ed={type,id,v};drawEditor();
+}
+function field([k,t,lab]){
+  const l=L(),v=ed.v,label=`<label class="f">${l[lab||k]||k}</label>`;
+  if(t==="text")return label+`<input class="inp" data-f="${k}" value="${esc(v[k])}" ${k==="title"||k==="name"?"autofocus":""}>`;
+  if(t==="area")return label+`<textarea class="inp" data-f="${k}">${esc(v[k])}</textarea>`;
+  if(t==="date")return label+`<input class="inp" type="date" data-f="${k}" value="${esc(v[k])}">`;
+  if(t==="time")return label+`<input class="inp" type="time" data-f="${k}" value="${esc(v[k])}">`;
+  if(t==="num")return label+`<input class="inp" type="number" min="0" inputmode="numeric" data-f="${k}" value="${esc(v[k])}">`;
+  if(t==="check")return`<div class="chips" style="margin-top:14px"><button class="chip ${v[k]?"on":""}" data-ed="check" data-k="${k}">${v[k]?"✓ ":""}${l[lab||k]}</button></div>`;
+  if(t==="who")return label+`<div class="chips">${S.people.map(p=>`<button class="chip ${v.who.includes(p.id)?"on":""}" data-ed="who" data-k="${p.id}">${esc(p.emoji)} ${esc(pname(p))}</button>`).join("")}</div>
+     <div class="note" style="margin:4px 2px 0">${v.who.length?"":"👪 "+l.everyone}</div>`;
+  if(t==="days")return label+`<div class="chips">${WEEK.map(d=>`<button class="chip ${v.days.includes(d)?"on":""}" data-ed="day" data-k="${d}">${WD[S.lang][d]}</button>`).join("")}</div>`;
+  if(t==="repeat")return label+`<div class="chips">${[["",l.rNone],["week",l.rWeek],["month",l.rMonth],["year",l.rYear]].map(([x,n])=>`<button class="chip ${v.repeat===x?"on":""}" data-ed="set" data-k="repeat" data-v="${x}">${n}</button>`).join("")}</div>`;
+  if(t==="group")return label+`<div class="chips">${S.groups.map(g=>`<button class="chip ${v.group===g.id?"on":""}" data-ed="set" data-k="group" data-v="${g.id}">${esc(g.emoji)} ${esc(tt(g.name))}</button>`).join("")}</div>`;
+  if(t==="kind")return label+`<div class="chips">${["insurance","season","other"].map(x=>`<button class="chip ${v.kind===x?"on":""}" data-ed="set" data-k="kind" data-v="${x}">${KICON[x]} ${l[x]}</button>`).join("")}</div>`;
+  if(t==="color")return label+`<div class="chips">${COLORS.map(c=>`<button class="chip" data-ed="set" data-k="color" data-v="${c}" style="background:${c};width:38px;height:38px;padding:0;${v.color===c?"outline:3px solid var(--ink);outline-offset:2px":""}"></button>`).join("")}</div>`;
+  return"";
+}
+function drawEditor(){
+  const l=L();let bg=document.querySelector(".sheet-bg");
+  if(!bg){bg=document.createElement("div");bg.className="sheet-bg";document.body.appendChild(bg);
+    bg.addEventListener("click",e=>{if(e.target===bg)closeEditor()})}
+  const scroll=bg.querySelector(".sheet")?bg.querySelector(".sheet").scrollTop:0;
+  bg.innerHTML=`<div class="sheet"><h3>${ed.id?l.edit:l[NEWT[ed.type]]}</h3>${SCHEMA[ed.type].map(field).join("")}
+    <div class="btns">${ed.id&&ed.id!=="house"?`<button class="btn danger" data-ed="del">${l.del}</button>`:""}<button class="btn sec" data-ed="cancel">${l.cancel}</button><button class="btn" data-ed="save">${l.save}</button></div></div>`;
+  bg.querySelector(".sheet").scrollTop=scroll;
+}
+function readInputs(){document.querySelectorAll(".sheet [data-f]").forEach(i=>{ed.v[i.dataset.f]=i.type==="number"?Number(i.value||0):i.value.trim()})}
+function closeEditor(){const bg=document.querySelector(".sheet-bg");if(bg)bg.remove();ed=null}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-ed]");if(!b||!ed)return;readInputs();
+  const a=b.dataset.ed,k=b.dataset.k,v=ed.v;
+  if(a==="check")v[k]=!v[k];
+  else if(a==="who"){v.who=v.who.includes(k)?v.who.filter(x=>x!==k):v.who.concat(k)}
+  else if(a==="day"){const d=Number(k);v.days=v.days.includes(d)?v.days.filter(x=>x!==d):v.days.concat(d)}
+  else if(a==="set")v[k]=b.dataset.v;
+  else if(a==="cancel")return closeEditor();
+  else if(a==="del"){const st=STORE[ed.type];S[st]=S[st].filter(x=>x.id!==ed.id);
+    if(ed.type==="group")S.care.forEach(c=>{if(c.group===ed.id)c.group="house"});
+    if(ed.type==="person"){LISTS.forEach(L_=>S[L_].forEach(x=>{if(x.who)x.who=x.who.filter(w=>w!==ed.id)}));openPerson=null}
+    commit(st);closeEditor();toast(L().deleted);return render()}
+  else if(a==="save"){
+    if(!(v.title||v.name))return;
+    const st=STORE[ed.type];
+    if(ed.id){const i=S[st].findIndex(x=>x.id===ed.id);S[st][i]=Object.assign({},S[st][i],v,{sample:false})}
+    else S[st].push(Object.assign({id:uid()},v));
+    commit(st);closeEditor();toast(L().saved);return render();
+  }
+  drawEditor();
+});
+
+/* ---------- actions ---------- */
+function commit(){save();pushAll()}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-act]");if(!b||e.target.closest(".sheet"))return;
+  const a=b.dataset.act,id=b.dataset.id,l=L(),t=todayISO();
+  if(a==="go"){view=b.dataset.v;more=false;if(view!=="family")openPerson=null;window.scrollTo(0,0)}
+  else if(a==="lang"){S.lang=b.dataset.v;save()}
+  else if(a==="more")more=!more;
+  else if(a==="new"){const pre={};if(b.dataset.who)pre.who=[b.dataset.who];if(b.dataset.must)pre.must=true;if(b.dataset.group)pre.group=b.dataset.group;
+    if(b.dataset.type==="event"&&!b.dataset.who){}return openEditor(b.dataset.type,null,pre)}
+  else if(a==="edit")return openEditor(b.dataset.type,id);
+  else if(a==="openPerson"){openPerson=id;window.scrollTo(0,0)}
+  else if(a==="closePerson")openPerson=null;
+  else if(a==="listTab")listTab=b.dataset.v;
+  else if(a==="homeTab")homeTab=b.dataset.v;
+  else if(a==="toggle"){const k=S.tasks.find(x=>x.id===id);if(!k)return;
+    if(k.done)k.done=null;
+    else if(k.repeat){const base=k.due&&k.due>t?k.due:(k.due||t);
+      k.due=k.repeat==="week"?addDays(base,7):k.repeat==="month"?addMonths(base,1):addMonths(base,12);
+      toast("✓ "+l.nextOn+" "+fmt(k.due))}
+    else{k.done=t;toast("✓ "+l.markDone)}
+    commit()}
+  else if(a==="careDone"){const c=S.care.find(x=>x.id===id);c.last=t;commit();toast("✓ "+l.nextOn+" "+fmt(careNext(c),true))}
+  else if(a==="ack"){S.acks[id]=b.dataset.n;commit()}
+  else if(a==="clearSamples"){LISTS.forEach(k=>{if(k!=="people")S[k]=S[k].filter(x=>!x.sample)});commit();toast(l.samplesCleared)}
+  else if(a==="hideBanner"){S.showBanner=false;save()}
+  else if(a==="wake"){S.wake=!S.wake;save();setWake()}
+  else if(a==="export"){const txt=btoa(unescape(encodeURIComponent(JSON.stringify(shared()))));
+    (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast(l.copied)).catch(()=>prompt(l.exportB,txt))}
+  else if(a==="import"){const txt=prompt(l.pastePrompt);if(!txt)return;
+    try{const d=JSON.parse(decodeURIComponent(escape(atob(txt.trim()))));if(!d.people)throw 0;applyShared(d);commit();toast(l.restored)}catch(_){toast(l.bad)}}
+  else if(a==="reset"){if(confirm(l.sure)){localStorage.removeItem(KEY);location.reload()}return}
+  else if(a==="famnew"){const c=Array.from({length:8},()=>"ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[Math.floor(Math.random()*32)]).join("");startSync(c.slice(0,4)+"-"+c.slice(4),true)}
+  else if(a==="famjoin"){const v=(document.getElementById("famcode").value||"").toUpperCase().replace(/[^A-Z0-9]/g,"");if(v.length!==8)return;startSync(v.slice(0,4)+"-"+v.slice(4),false)}
+  else if(a==="famleave"){stopSync();S.family=null;save()}
+  render();
+});
+
+/* ---------- screen wake lock (wall tablet) ---------- */
+let lock=null;
+async function setWake(){try{if(S.wake&&"wakeLock" in navigator&&!document.hidden){lock=await navigator.wakeLock.request("screen")}else if(!S.wake&&lock){await lock.release();lock=null}}catch(_){}}
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){setWake();render()}});
+/* clock + refresh each minute (keeps the wall screen current) */
+setInterval(()=>{if(view==="today"&&!ed&&!(document.activeElement&&/INPUT|TEXTAREA/.test(document.activeElement.tagName)))render()},30000);
+
+/* ---------- family sync (same Firebase as Kodukord) ---------- */
+const FB=window.KODUKORD_FIREBASE||null;let fbDb=null,famRef=null,conn="connecting",fbLoading=null;
+const toArr=v=>Array.isArray(v)?v.filter(x=>x!=null):v&&typeof v==="object"?Object.values(v):[];
+function loadScript(src){return new Promise((ok,no)=>{const e=document.createElement("script");e.src=src;e.onload=ok;e.onerror=no;document.head.appendChild(e)})}
+function fbInit(){
+  if(fbDb)return Promise.resolve(fbDb);
+  if(!fbLoading){const v="10.12.2",b="https://www.gstatic.com/firebasejs/"+v+"/";
+    fbLoading=loadScript(b+"firebase-app-compat.js").then(()=>loadScript(b+"firebase-database-compat.js")).then(()=>{
+      if(!firebase.apps.length)firebase.initializeApp(FB);fbDb=firebase.database();
+      fbDb.ref(".info/connected").on("value",s=>{conn=s.val()?"online":"offline";if(view==="settings")render()});
+      return fbDb});}
+  return fbLoading;
+}
+function shared(){const o={acks:S.acks};LISTS.forEach(k=>o[k]=S[k]);return o}
+function applyShared(v){LISTS.forEach(k=>{S[k]=toArr(v[k]).map(x=>{if(x.who)x.who=toArr(x.who);if(x.days)x.days=toArr(x.days);return x})});S.acks=v.acks||{}}
+function pushAll(){if(famRef)famRef.set(JSON.parse(JSON.stringify(shared()))).catch(()=>{})}
+function startSync(code,isNew){
+  if(!FB)return;
+  fbInit().then(db=>{
+    stopSync();S.family=code;save();
+    famRef=db.ref("pesa/"+code.replace("-",""));
+    let first=true;
+    famRef.on("value",snap=>{
+      const v=snap.val();
+      if(!v){if(first)pushAll();first=false;return}
+      if(first&&!isNew)toast(L().joined);
+      first=false;applyShared(v);save();
+      if(!ed&&!(document.activeElement&&/INPUT|TEXTAREA/.test(document.activeElement.tagName)))render();
+    });
+    render();
+  }).catch(()=>{conn="offline";render()});
+}
+function stopSync(){if(famRef){famRef.off();famRef=null}}
+function syncCard(){
+  const l=L();
+  if(!FB)return`<div class="note" style="margin:0">${l.syncOff}</div>`;
+  if(!S.family)return`<div class="note" style="margin:0 0 10px">${l.syncIntro}</div>
+    <button class="btn" data-act="famnew" style="width:100%">${l.famNew}</button>
+    <div style="display:flex;gap:8px;margin-top:12px"><input class="inp" id="famcode" placeholder="${l.famCodePh}" autocapitalize="characters" autocomplete="off"><button class="btn sec" data-act="famjoin">${l.famJoin}</button></div>`;
+  const dot=conn==="online"?"🟢":conn==="offline"?"🟠":"⚪";
+  return`<div style="font-size:28px;font-weight:700;letter-spacing:3px;margin:2px 0 6px">${esc(S.family)}</div>
+    <div class="note" style="margin:0 0 8px">${l.famHint}</div>
+    <div style="font-size:14px;margin-bottom:12px">${dot} ${conn==="online"?l.online:conn==="offline"?l.offline:l.connecting}</div>
+    <button class="btn sec" data-act="famleave" style="width:100%">${l.famLeave}</button>`;
+}
+
+render();setWake();
+if(FB&&S.family)startSync(S.family,false);
+if("serviceWorker" in navigator&&location.protocol==="https:"&&!/claude|anthropic/.test(location.hostname)){
+  try{navigator.serviceWorker.register("sw.js").catch(()=>{})}catch(_){}
+}
+</script>
+</body>
+</html>

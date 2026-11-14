@@ -148,7 +148,7 @@ const BASE = [
  ["wc-paper","wc","d",1,"Check toilet paper and hand towel","Kontrolli WC-paberit ja käterätikut","frank"],
  ["b-rinse","bath","d",2,"Rinse tub after bath, hang towels to dry","Loputa vann pärast pesu, riputa rätikud kuivama"],
  ["h-shoes","hall","d",2,"Shoes on the rack, jackets on hooks","Jalanõud riiulisse, joped nagisse","frank"],
- ["l-toys","living","d",10,"10-minute toy tidy","10-minutiline mänguasjade koristus","frank"],
+ ["l-toys","living","d",10,"Quick toy tidy","Kiire mänguasjade koristus","frank"],
  ["l-surf","living","d",3,"Clear tables, fluff cushions","Lauad tühjaks, padjad kohendatud"],
  ["o-bed","ours","d",2,"Make the bed","Tee voodi korda"],
  ["o-clothes","ours","d",2,"Clothes to hamper or closet","Riided pesukorvi või kappi"],
@@ -198,7 +198,7 @@ const BASE = [
  ["wr-tidy","wardrobe","w5",5,"Tidy shelves, hang loose clothes","Korrasta riiulid, riputa lahtised riided"],
  // ---- Saturday
  ["h-bedding","home","w6",20,"Change bed linen in all bedrooms","Vaheta voodipesu kõigis magamistubades"],
- ["h-family","home","w6",30,"Family 30-minute reset (everyone helps)","Pere 30-minutiline koristus (kõik aitavad)","both"],
+ ["h-family","home","w6",30,"Family reset (everyone helps)","Pere koristus (kõik aitavad)","both"],
  ["h-recycle","home","w6",5,"Recycling out: paper, plastic, glass","Taaskasutus välja: paber, plast, klaas","ben"],
  // ---- Sunday
  ["h-plan","home","w7",10,"Plan the week: meals, shopping, extra jobs","Planeeri nädal: söögid, ostud, lisatööd"],
@@ -238,7 +238,7 @@ const BASE = [
 /* ---------- Text ---------- */
 const T = {
  en:{today:"Today",rooms:"Rooms",plan:"Plan",tips:"Tips",daily:"Every day",focus:"Today's focus",catchup:"Catch up",
-   catchupHint:"Missed earlier. Do one if you have time, skip the rest.",left:"min left",allDone:"All done for today!",
+   catchupHint:"Missed earlier. Do one if you have time, skip the rest.",start:"Pick one thing and start",going:"Nice, keep going",allDone:"All done for today!",
    allDoneSub:"The home is in order. Enjoy the evening.",of:"of",tasks:"tasks",due:"to do today",allok:"All in order",
    weekly:"Every week",biweekly:"Every 2 weeks",monthly:"Every month",quarterly:"Every 3 months",
    lastDone:"done",never:"not done yet",todayW:"today",yesterday:"yesterday",daysAgo:"d ago",
@@ -257,7 +257,7 @@ const T = {
    famCode:"Family code",famHint:"Type this code on every phone or laptop that should share the list.",
    online:"Synced",offline:"Offline, will sync when back online",connecting:"Connecting…",badCode:"Codes have 8 letters/numbers",joined:"Joined the family list"},
  et:{today:"Täna",rooms:"Toad",plan:"Plaan",tips:"Nõuanded",daily:"Iga päev",focus:"Tänane fookus",catchup:"Järeletegemine",
-   catchupHint:"Varem tegemata. Tee üks, kui aega on, ülejäänu jäta vahele.",left:"min jäänud",allDone:"Tänaseks kõik tehtud!",
+   catchupHint:"Varem tegemata. Tee üks, kui aega on, ülejäänu jäta vahele.",start:"Vali üks asi ja alusta",going:"Tubli, jätka samas vaimus",allDone:"Tänaseks kõik tehtud!",
    allDoneSub:"Kodu on korras. Naudi õhtut.",of:"/",tasks:"tööd",due:"täna teha",allok:"Kõik korras",
    weekly:"Iga nädal",biweekly:"Iga 2 nädala järel",monthly:"Iga kuu",quarterly:"Iga 3 kuu järel",
    lastDone:"tehtud",never:"veel tegemata",todayW:"täna",yesterday:"eile",daysAgo:"p tagasi",
@@ -284,7 +284,7 @@ const DAY_ONE = {en:["","Monday","Tuesday","Wednesday","Thursday","Friday","Satu
 const MONTHS_Q = {en:["Jan, Apr, Jul, Oct","Feb, May, Aug, Nov","Mar, Jun, Sep, Dec"],
   et:["jaan, apr, juuli, okt","veebr, mai, aug, nov","märts, juuni, sept, dets"]};
 const TIPS = [
- ["🌙","Evening reset, 10 minutes","Õhtune 10 minutit",
+ ["🌙","Quick evening reset","Kiire õhtune kordaseadmine",
   "Before bed, walk through the home and put things back. A tidy start makes the morning calm and keeps clutter from piling up.",
   "Enne magamaminekut käi kodu läbi ja pane asjad oma kohale. Korras algus teeb hommiku rahulikuks ja segadus ei kuhju."],
  ["✋","Don't put it down, put it away","Ära pane maha, pane ära",
@@ -294,8 +294,8 @@ const TIPS = [
   "Dust first, then vacuum, then mop. Dust falls down, so cleaning in this order means you never do a job twice.",
   "Kõigepealt tolm, siis tolmuimeja, siis põrandapesu. Tolm langeb alla, nii ei pea ühtegi tööd kaks korda tegema."],
  ["📅","One focus area a day","Üks fookusala päevas",
-  "Nobody cleans the whole home at once. The daily list keeps it livable; the day's focus keeps it clean. That's about 20–30 extra minutes.",
-  "Keegi ei korista kogu kodu korraga. Igapäevane nimekiri hoiab kodu elamiskõlbulikuna, päeva fookus hoiab puhtana. See on umbes 20–30 lisaminutit."],
+  "Nobody cleans the whole home at once. The daily list keeps it livable; the day's focus keeps it clean.",
+  "Keegi ei korista kogu kodu korraga. Igapäevane nimekiri hoiab kodu elamiskõlbulikuna, päeva fookus hoiab puhtana."],
  ["💦","Frank's spray bottle job","Franki pihustipudeli töö",
   "Give Frank his own spray bottle with plain water and a cloth. Mirrors, the table, cabinet doors and windowsills are perfect for him. Tasks marked 💦 suit him.",
   "Anna Frankile oma pihustipudel puhta veega ja lapp. Peeglid, laud, kapiuksed ja aknalauad sobivad talle ideaalselt. 💦 märgiga tööd sobivad talle."],
@@ -306,8 +306,8 @@ const TIPS = [
   "A small load every day never becomes a mountain. Start it in the morning, hang it after work, fold on Friday.",
   "Väike masinatäis iga päev ei kasva kunagi mäeks. Pane hommikul käima, riputa pärast tööd, volti reedel."],
  ["🧴","A caddy in each bathroom","Korv igas vannitoas",
-  "Keep a cloth, spray and toilet brush in both the WC and the bathroom. When supplies are right there, a 2-minute wipe actually happens.",
-  "Hoia lappi, pihustit ja WC-harja nii WC-s kui vannitoas. Kui vahendid on käepärast, saab 2-minutiline pühkimine päriselt tehtud."],
+  "Keep a cloth, spray and toilet brush in both the WC and the bathroom. When supplies are right there, a quick wipe actually happens.",
+  "Hoia lappi, pihustit ja WC-harja nii WC-s kui vannitoas. Kui vahendid on käepärast, saab kiire pühkimine päriselt tehtud."],
  ["🚪","Stop dirt at the door","Peata mustus uksel",
   "A good doormat and shoes off in the hallway keep most of the dirt out of the other 100+ m². Shake the mat weekly.",
   "Hea uksematt ja jalanõud esikus hoiavad suurema osa mustusest ülejäänud 100+ m²-st eemal. Raputa matti iga nädal."],
@@ -423,7 +423,7 @@ function row(item,ctx){
   const extra=ctx==="room"?`<button class="x" data-hide="${t.id}" title="${t.custom?L().del:L().hide}">${t.custom?"🗑":"✕"}</button>`:"";
   return`<div class="task ${item.done?"done":""}" data-id="${t.id}" data-done="${item.done?1:0}" role="button" tabindex="0">
     <span class="chk"></span><div class="tbody"><div class="tname">${nm(t)}</div><div class="tmeta">${meta}</div></div>
-    <span class="mins">${t.min}′</span>${extra}</div>`;
+    ${extra}</div>`;
 }
 
 /* ---------- Views ---------- */
@@ -446,19 +446,18 @@ function render(){
 function vToday(){
   const l=L(),m=todayModel(),z=ZONES[dow(new Date())];
   const all=[...m.daily,...m.focus],done=all.filter(x=>x.done).length;
-  const left=all.filter(x=>!x.done).reduce((a,x)=>a+x.t.min,0);
   const pct=all.length?Math.round(done/all.length*100):0;
-  let h=`<div class="card hero"><div class="sub">${done} ${l.of} ${all.length} ${l.tasks}</div>
-    <div class="big">${pct===100?"🎉 "+l.done:"≈ "+left+" "+l.left}</div>
+  let h=`<div class="card hero">
+    <div class="big">${pct===100?"🎉 "+l.done:done?l.going:l.start}</div>
     <div class="bar"><i style="width:${pct}%"></i></div>
     <div class="focus">${z.em} ${l.focus}: <b>${esc(z[S.lang])}</b></div></div>`;
   if(pct===100&&!m.catchup.some(x=>!x.done))h+=`<div class="card yay"><div class="e">✨🏡✨</div><b>${l.allDone}</b><span class="note">${l.allDoneSub}</span></div>`;
-  h+=`<h2>${z.em} ${l.focus}<small>${m.focus.filter(x=>!x.done).reduce((a,x)=>a+x.t.min,0)}′</small></h2>`;
+  h+=`<h2>${z.em} ${l.focus}</h2>`;
   h+=m.focus.length?`<div class="list">${sortDone(m.focus).map(x=>row(x)).join("")}</div>`:`<div class="list"><div class="empty">${l.none}</div></div>`;
-  h+=`<h2>☀️ ${l.daily}<small>${m.daily.filter(x=>!x.done).reduce((a,x)=>a+x.t.min,0)}′</small></h2>`;
+  h+=`<h2>☀️ ${l.daily}</h2>`;
   h+=`<div class="list">${sortDone(m.daily).map(x=>row(x)).join("")}</div>`;
   if(m.catchup.length){
-    h+=`<h2>🕓 ${l.catchup}<small>${m.catchup.filter(x=>!x.done).length}</small></h2><div class="note" style="margin:-4px 4px 8px">${l.catchupHint}</div>`;
+    h+=`<h2>🕓 ${l.catchup}</h2><div class="note" style="margin:-4px 4px 8px">${l.catchupHint}</div>`;
     const first=m.catchup.slice(0,4),rest=m.catchup.slice(4);
     h+=`<div class="list">${first.map(x=>row(x,"catch")).join("")}</div>`;
     if(rest.length)h+=`<details${catchOpen?" open":""} id="more"><summary>+ ${rest.length} ${l.more}</summary><div class="list">${rest.map(x=>row(x,"catch")).join("")}</div></details>`;
@@ -483,15 +482,14 @@ function vRoom(id){
   let h=`<button class="back" id="back">‹ ${l.rooms}</button><div class="rhead"><span class="em">${r.em}</span><h3>${esc(r[S.lang])}</h3></div>`;
   for(const[k,name]of groups){
     const g=vis.filter(t=>t.sp.t===k);if(!g.length)continue;
-    h+=`<h2>${name}<small>${g.reduce((a,t)=>a+t.min,0)}′</small></h2><div class="list">${g.map(t=>row({t,done:isDone(t)},"room")).join("")}</div>`;
+    h+=`<h2>${name}</h2><div class="list">${g.map(t=>row({t,done:isDone(t)},"room")).join("")}</div>`;
   }
   if(hid.length)h+=`<details><summary>${l.hidden} (${hid.length})</summary><div class="list">${hid.map(t=>`<div class="task"><div class="tbody"><div class="tname" style="color:var(--muted)">${nm(t)}</div></div><button class="btn sec" data-restore="${t.id}">${l.restore}</button></div>`).join("")}</div></details>`;
   const dopt=[1,2,3,4,5,6,7].map(i=>`<option value="${i}">${DAY_ONE[S.lang][i]}</option>`).join("");
   h+=`<h2>${l.addTask}</h2><div class="card"><form id="addf">
     <input type="text" id="an" placeholder="${l.taskName}" maxlength="80" required>
-    <div class="row"><div><label class="f">${l.howOften}</label><select id="af">
+    <div><label class="f">${l.howOften}</label><select id="af">
       <option value="d">${l.daily}</option><option value="w" selected>${l.weekly}</option><option value="b">${l.biweekly}</option><option value="m">${l.monthly}</option></select></div>
-      <div><label class="f">${l.minutes}</label><input type="number" id="am" value="5" min="1" max="240"></div></div>
     <div class="row" id="adw"><div><label class="f">${l.day}</label><select id="ad">${dopt}</select></div>
       <div id="awk" style="display:none"><label class="f">${l.week}</label><select id="aw"><option>1</option><option>2</option><option>3</option><option>4</option></select></div></div>
     <button class="btn" style="width:100%;margin-top:12px">${l.add}</button></form></div>`;
@@ -504,9 +502,8 @@ function vPlan(){
   for(let i=1;i<=7;i++){
     const d=addD(mon,i-1),z=ZONES[i];
     const extra=all.filter(t=>t.sp.t!=="d"&&planned(t,d));
-    const mins=extra.reduce((a,t)=>a+t.min,0);
     h+=`<div class="day ${i===td?"today":""}"><div class="dn">${DAYS[S.lang][i]} ${d.getDate()}</div><div class="dz"><b>${z.em} ${esc(z[S.lang])}</b>
-      <div>${extra.length} ${l.tasks} · ${mins}′${extra.some(t=>t.sp.t!=="w"&&t.sp.t!=="b")?" · +"+extra.filter(t=>t.sp.t==="m"||t.sp.t==="q").map(nm).join(", "):""}</div></div></div>`;
+      ${extra.some(t=>t.sp.t==="m"||t.sp.t==="q")?"<div>+ "+extra.filter(t=>t.sp.t==="m"||t.sp.t==="q").map(nm).join(", ")+"</div>":""}</div></div>`;
   }
   h+=`</div>`;
   // month extras
@@ -515,7 +512,7 @@ function vPlan(){
   h+=`<h2>${l.thisMonth}</h2><div class="list">${items.map(({t,d})=>{
     const isd=doneFor(t,iso(d)),r=R[t.room];
     return`<div class="task ${isd?"done":""}" data-id="${t.id}" data-done="${isd?1:0}" role="button" tabindex="0"><span class="chk"></span><div class="tbody"><div class="tname">${nm(t)}</div>
-      <div class="tmeta"><span>${DAYS[S.lang][dow(d)]} ${d.getDate()}.${d.getMonth()+1}</span><span>· ${r.em} ${esc(r[S.lang])}</span>${helpPill(t)}</div></div><span class="mins">${t.min}′</span></div>`}).join("")}</div>`;
+      <div class="tmeta"><span>${DAYS[S.lang][dow(d)]} ${d.getDate()}.${d.getMonth()+1}</span><span>· ${r.em} ${esc(r[S.lang])}</span>${helpPill(t)}</div></div></div>`}).join("")}</div>`;
   return h;
 }
 function vTips(){
@@ -580,9 +577,8 @@ document.addEventListener("submit",e=>{
   if(e.target.id!=="addf")return;e.preventDefault();
   const name=document.getElementById("an").value.trim();if(!name)return;
   const f=document.getElementById("af").value,d=document.getElementById("ad").value,w=document.getElementById("aw").value;
-  const min=Math.max(1,Math.min(240,parseInt(document.getElementById("am").value)||5));
   const s=f==="d"?"d":f==="w"?"w"+d:f==="b"?"b0."+d:"m"+w+"."+d;
-  S.custom.push({id:"c-"+Date.now().toString(36),room:openRoom,s,min,en:name,et:name,help:null});
+  S.custom.push({id:"c-"+Date.now().toString(36),room:openRoom,s,min:0,en:name,et:name,help:null});
   save();push({custom:S.custom});toast(L().added);render();
 });
 /* re-render when the day changes or the app comes back to the foreground */
